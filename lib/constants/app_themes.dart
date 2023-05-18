@@ -97,7 +97,6 @@ class AppThemes {
     appBarTheme: AppBarTheme(
       color: _lightBackgroundAppBarColor,
       iconTheme: IconThemeData(color: _lightTextColor),
-      textTheme: _lightTextTheme,
     ),
     colorScheme: ColorScheme.light(
       primary: _lightPrimaryColor,
@@ -176,7 +175,7 @@ class AppThemes {
   static final ThemeData darkTheme = ThemeData(
     brightness: Brightness.dark,
     //primarySwatch: _darkPrimaryColor, //cant be Color on MaterialColor so it can compute different shades.
-    accentColor: _darkPrimaryColor, //prefix icon color form input on focus
+    hintColor: _darkPrimaryColor, //prefix icon color form input on focus
 
     fontFamily: font1,
     scaffoldBackgroundColor: _darkBackgroundColor,
@@ -186,7 +185,6 @@ class AppThemes {
     appBarTheme: AppBarTheme(
       color: _darkBackgroundAppBarColor,
       iconTheme: IconThemeData(color: _darkTextColor),
-      textTheme: _darkTextTheme,
     ),
     colorScheme: ColorScheme.dark(
       primary: _darkPrimaryColor,

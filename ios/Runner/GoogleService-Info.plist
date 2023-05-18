@@ -3,21 +3,21 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>524197078337-96irqf3smo96s6f48mc1neh2vh7jber5.apps.googleusercontent.com</string>
+	<string>775592199728-a8shrmai2h1j2j4ukh1kflmro8iqra76.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.524197078337-96irqf3smo96s6f48mc1neh2vh7jber5</string>
+	<string>com.googleusercontent.apps.775592199728-a8shrmai2h1j2j4ukh1kflmro8iqra76</string>
 	<key>API_KEY</key>
-	<string>AIzaSyAZaaG4pky5QFv-P_mXKhmn8O5ms2ifWXE</string>
+	<string>AIzaSyA6_g4n6X_BDwtPq8Lw4yZeS8HqMLAr0Co</string>
 	<key>GCM_SENDER_ID</key>
-	<string>524197078337</string>
+	<string>775592199728</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.tapmode.flutter-starter</string>
+	<string>com.fclarke.nesting</string>
 	<key>PROJECT_ID</key>
-	<string>flutter-starter-delay</string>
+	<string>nesting-7da6c</string>
 	<key>STORAGE_BUCKET</key>
-	<string>flutter-starter-delay.appspot.com</string>
+	<string>nesting-7da6c.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -29,8 +29,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:524197078337:ios:7373a07c0abd9619fa2dc0</string>
-	<key>DATABASE_URL</key>
-	<string>https://flutter-starter-delay.firebaseio.com</string>
+	<string>1:775592199728:ios:77dc0c20520e2cdbe88ff5</string>
 </dict>
 </plist>

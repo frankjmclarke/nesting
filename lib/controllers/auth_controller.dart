@@ -9,7 +9,8 @@ import 'package:flutter_starter/ui/auth/auth.dart';
 import 'package:flutter_starter/ui/ui.dart';
 import 'package:flutter_starter/ui/components/components.dart';
 import 'package:flutter_starter/helpers/helpers.dart';
-
+//our user and authentication functions for creating, logging in and out our
+// user and saving our user data.
 class AuthController extends GetxController {
   static AuthController to = Get.find();
   TextEditingController nameController = TextEditingController();
@@ -247,3 +248,32 @@ class AuthController extends GetxController {
     return _auth.signOut();
   }
 }
+
+/*
+The AuthController class extends GetxController from the GetX package, which is
+a state management library for Flutter.
+It includes dependencies like flutter/material.dart, flutter/services.dart,
+firebase_auth, cloud_firestore, and others that are required for authentication and UI components.
+The AuthController class contains various methods and properties for user authentication and user management.
+It initializes Firebase authentication (FirebaseAuth) and Firestore (FirebaseFirestore) instances.
+The class uses Get for dependency injection to access the instance of AuthController from anywhere in the app.
+The onReady method is called when the controller is initialized and sets up the
+authentication state change listener using ever and binds the firebaseUser stream to user.
+The handleAuthChanged method is responsible for handling authentication state
+changes and navigating the user to the appropriate UI screens based on their authentication status.
+The class provides methods for signing in with email and password
+(signInWithEmailAndPassword), registering a new user with email and password
+(registerWithEmailAndPassword), updating the user profile (updateUser), sending
+a password reset email (sendPasswordResetEmail), and signing out (signOut).
+The getUser method retrieves the currently authenticated user using Firebase authentication.
+The user stream provides real-time updates of the authentication state changes.
+The streamFirestoreUser method retrieves the user data from Firestore by
+streaming the document corresponding to the authenticated user's UID.
+The getFirestoreUser method retrieves the user data from Firestore as a one-time fetch.
+The class also includes methods for updating the Firestore user document
+(_updateUserFirestore) and creating a new user document (_createUserFirestore).
+The isAdmin method checks if the current user has admin privileges by querying the admin collection in Firestore.
+The signOut method handles the sign-out process.
+Overall, this code provides a foundation for managing user authentication and
+user data in a Flutter app using Firebase services.
+ */
