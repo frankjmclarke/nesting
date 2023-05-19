@@ -5,15 +5,15 @@ import 'package:get_storage/get_storage.dart';
 import 'dart:ui' as ui;
 
 class LanguageController extends GetxController {
-  static LanguageController get to => Get.find();
-  final language = "".obs;
-  final store = GetStorage();
+  static LanguageController get to => Get.find();//allows accessing the LanguageController instance from anywhere in the app without the need for direct instantiation.
+  final language = "".obs;//language variable holds the current selected language and is observable, meaning that changes to its value will trigger UI updates.
+  final store = GetStorage();// store language
 
   String get currentLanguage => language.value;
 
   @override
   void onReady() async {
-    //setInitialLocalLanguage();
+    setInitialLocalLanguage();
     super.onInit();
   }
 

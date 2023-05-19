@@ -13,7 +13,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   await GetStorage.init();
-  Get.put<AuthController>(AuthController());
+  Get.put<AuthController>(AuthController());//registers an instance of the AuthController class as a dependency, making it available for other parts of the application to use.
   Get.put<ThemeController>(ThemeController());
   Get.put<LanguageController>(LanguageController());
   runApp(MyApp());
@@ -23,12 +23,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ThemeController.to.getThemeModeFromStore();
-    return GetBuilder<LanguageController>(
-      builder: (languageController) => Loading(
+    return GetBuilder<LanguageController>(//The GetBuilder widget rebuilds its child whenever the state of the LanguageController changes.
+      builder: (languageController) => Loading(// takes the languageController as a parameter and returns a Loading widget.
         child: GetMaterialApp(
           translations: Localization(),
-          locale: languageController.getLocale, // <- Current locale
-          navigatorObservers: [
+          locale: languageController.getLocale,//sets the app's locale based on the locale obtained from the LanguageController.
+          navigatorObservers: [//allows adding observers to track navigation events.
             // FirebaseAnalyticsObserver(analytics: FirebaseAnalytics()),
           ],
           debugShowCheckedModeBanner: false,
@@ -37,7 +37,7 @@ class MyApp extends StatelessWidget {
           darkTheme: AppThemes.darkTheme,
           themeMode: ThemeMode.system,
           initialRoute: "/",
-          getPages: AppRoutes.routes,
+          getPages: AppRoutes.routes,// contains mappings between routes and their respective widgets.
         ),
       ),
     );
