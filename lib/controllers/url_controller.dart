@@ -11,14 +11,15 @@ import 'package:flutter_starter/ui/components/components.dart';
 import '../models/url_model.dart';
 
 class UrlController extends GetxController {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  Rxn<UrlModel> firebaseUrl = Rxn<UrlModel>();
   static UrlController to = Get.find();
   late TextEditingController nameController;
   late TextEditingController emailController;
   late TextEditingController passwordController;
-  final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _db = FirebaseFirestore.instance;
-  Rxn<UrlModel> firebaseUrl = Rxn<UrlModel>();
-  Rxn<UrlModelList> firestoreUrlList = Rxn<UrlModelList>();
+    Rxn<UrlModelList> firestoreUrlList = Rxn<UrlModelList>();
+  //Rxn<List<UrlModel>> firestoreUrlList = Rxn<List<UrlModel>>();
   final RxBool admin = false.obs;
 
   Stream<UrlModelList> get urlList => firestoreUrlList.map(
@@ -26,18 +27,40 @@ class UrlController extends GetxController {
         UrlModelList(urls: urlList!.urls.isNotEmpty ? urlList.urls : []),
   );
 
-  @override
-  void onReady() async {
+  void onInit() {
+    super.onInit();
     nameController = TextEditingController();
     emailController = TextEditingController();
     passwordController = TextEditingController();
+    fetchUrlList().then((_) {
+      // Complete the future when fetchData() finishes
+      _completer.complete();
+    });
+  }
+
+  Completer<void> _completer = Completer<void>();
+
+  Future<void> onInitFuture() {
+    return _completer.future;
+  }
+
+  Future<void> fetchUrlList() async {
+    final snapshot = await _db.collection('urls').get();
+    final urls = snapshot.docs.map((doc) => UrlModel.fromMap(doc.data())).toList();
+    firestoreUrlList.value = UrlModelList(urls: urls);
+    print("fetchUrlList SUCCESS " );
+  }
+
+  @override
+  void onReady() async {
 
     // Run every time Url List changes
-    ever(firestoreUrlList, handleUrlListChanged);
+    // ever(firestoreUrlList, handleUrlListChanged);
 
-    firestoreUrlList.bindStream(urlList);
+    //firestoreUrlList.bindStream(urlList);
     //insertTestUrl();
     super.onReady();
+    fetchUrlList();
   }
 
   @override
@@ -50,7 +73,7 @@ class UrlController extends GetxController {
 
   void handleUrlListChanged(UrlModelList? _firebaseUrlList) async {
     if (_firebaseUrlList != null) {
-      firestoreUrlList.bindStream(streamFirestoreUrlList());
+      firestoreUrlList.bindStream(streamFirestoreUrlList() as Stream<UrlModelList?>);
       //await isAdmin();
     }
 
@@ -141,18 +164,18 @@ class UrlController extends GetxController {
       await _auth.sendPasswordResetEmail(email: emailController.text);
       hideLoadingIndicator();
       Get.snackbar(
-        'auth.resetPasswordNoticeTitle'.tr, 'auth.resetPasswordNotice'.tr,
-        snackPosition: SnackPosition.BOTTOM,
-        duration: Duration(seconds: 5),
-        backgroundColor: Get.theme.snackBarTheme.backgroundColor,
-        colorText: Get.theme.snackBarTheme.actionTextColor);
+          'auth.resetPasswordNoticeTitle'.tr, 'auth.resetPasswordNotice'.tr,
+          snackPosition: SnackPosition.BOTTOM,
+          duration: Duration(seconds: 5),
+          backgroundColor: Get.theme.snackBarTheme.backgroundColor,
+          colorText: Get.theme.snackBarTheme.actionTextColor);
     } on FirebaseAuthException catch (error) {
       hideLoadingIndicator();
       Get.snackbar('auth.resetPasswordFailed'.tr, error.message!,
-        snackPosition: SnackPosition.BOTTOM,
-        duration: Duration(seconds: 10),
-        backgroundColor: Get.theme.snackBarTheme.backgroundColor,
-        colorText: Get.theme.snackBarTheme.actionTextColor);
+          snackPosition: SnackPosition.BOTTOM,
+          duration: Duration(seconds: 10),
+          backgroundColor: Get.theme.snackBarTheme.backgroundColor,
+          colorText: Get.theme.snackBarTheme.actionTextColor);
     }
   }
 
