@@ -90,19 +90,18 @@ class UrlController extends GetxController {
     return _completer.future;
   }
 
-  Future<void> fetchUrlListOld() async {
-    final snapshot = await _db.collection('urls').get();
-    final urls =
-        snapshot.docs.map((doc) => UrlModel.fromMap(doc.data())).toList();
-    firestoreUrlList.value = UrlModelList(urls: urls);
-    print("fetchUrlList SUCCESS ");
-  }
-
   Future<void> fetchUrlList() async {
-    final snapshot = await _db.collection('urls').snapshots().first;
+    final snapshot = await _db.collection('urls').get();
     final urls = snapshot.docs.map((doc) => UrlModel.fromMap(doc.data())).toList();
     firestoreUrlList.value = UrlModelList(urls: urls);
     print("fetchUrlList SUCCESS ");
+
+    // Listen for changes in the Firestore collection
+    _db.collection('urls').snapshots().listen((snapshot) {
+      final urls = snapshot.docs.map((doc) => UrlModel.fromMap(doc.data())).toList();
+      firestoreUrlList.value = UrlModelList(urls: urls);
+      print("Firestore collection updated");
+    });
   }
 
   @override

@@ -21,8 +21,7 @@ class UrlListUI extends StatelessWidget {
             } else if (snapshot.hasError) {
               return Text('Error: ${snapshot.error}');
             } else if (snapshot.hasData) {
-              // Access the updated UrlModelList
-              UrlModelList urlList = snapshot.data!;
+              UrlModelList urlList = snapshot.data!; // Access the updated UrlModelList
               return ListView.builder(
                 itemCount: urlList.urls.length,
                 itemBuilder: (context, index) {
