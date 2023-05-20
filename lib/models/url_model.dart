@@ -11,6 +11,15 @@ class UrlModel {
       required this.name,
       required this.url});
 
+  Map<String, dynamic> toMap() {
+    return {
+      'uid': uid,
+      'email': email,
+      'name': name,
+      'url': url,
+    };
+  }
+
   factory UrlModel.fromMap(Map data) {
     return UrlModel(
       uid: data['uid'],
@@ -18,6 +27,7 @@ class UrlModel {
       name: data['name'] ?? '',
       url: data['url'] ?? '',
     );
+
   }
 
   @override
@@ -45,6 +55,12 @@ class UrlModelList {
 
   List<Map<String, dynamic>> toJson() =>
       urls.map((urlModel) => urlModel.toJson()).toList();
+
+  Map<String, dynamic> toMap() {
+    return {
+      'urls': urls.map((urlModel) => urlModel.toMap()).toList(),
+    };
+  }
 
   bool get isNotEmpty => urls.isNotEmpty;
   UrlModel? get first => urls.isNotEmpty ? urls[0] : null;

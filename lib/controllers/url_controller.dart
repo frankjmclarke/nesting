@@ -45,17 +45,18 @@ class UrlController extends GetxController {
   void _addTextToListIfUnique() {
     if (!containsText(_sharedText)) {
       UrlModelList currentList = firestoreUrlList.value ?? UrlModelList(urls: []);
-      currentList.urls.add(UrlModel(
+      UrlModel newUrlModel = UrlModel(
         uid: StringUtil.generateRandomId(15),
         email: '',
         name: '',
         url: _sharedText,
-      ));
-      print ('currentList '+currentList.urls.length.toString());
+      );
+      currentList.urls.add(newUrlModel);
+      print('currentList ' + currentList.urls.length.toString());
       firestoreUrlList.value = currentList;
+      insertUrl(newUrlModel);
     }
   }
-
 
   void onInit() {
     super.onInit();
@@ -227,16 +228,19 @@ class UrlController extends GetxController {
   }
 
   // Insert a test UrlModel into Firestore
+  UrlModel testUrl = UrlModel(
+    uid: StringUtil.generateRandomId(15),
+    email: 'testy@testy.com',
+    name: 'Testing URL',
+    url: 'https://google.com',
+  );
   Future<void> insertTestUrl() async {
+    insertUrl(testUrl);
+  }
+
+  Future<void> insertUrl( UrlModel testUrl) async {
     try {
       // Create a new test UrlModel
-      UrlModel testUrl = UrlModel(
-        uid: StringUtil.generateRandomId(15),
-        email: 'testy@testy.com',
-        name: 'Testing URL',
-        url: 'https://google.com',
-      );
-
       // Convert the UrlModel to a JSON map
       Map<String, dynamic> jsonData = testUrl.toJson();
 

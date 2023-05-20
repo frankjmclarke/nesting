@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controllers/url_controller.dart';
+import '../models/url_model.dart';
 
 class UrlListUI extends StatelessWidget {
   final UrlController myController = Get.put(UrlController());
@@ -12,19 +13,21 @@ class UrlListUI extends StatelessWidget {
         appBar: AppBar(
           title: Text('My App'),
         ),
-        body: FutureBuilder<void>(
-          future: myController.onInitFuture(),
+        body: StreamBuilder<UrlModelList>(
+          stream: myController.urlList, // Use the stream from UrlController
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return CircularProgressIndicator();
             } else if (snapshot.hasError) {
               return Text('Error: ${snapshot.error}');
-            } else {
+            } else if (snapshot.hasData) {
+              // Access the updated UrlModelList
+              UrlModelList urlList = snapshot.data!;
               return ListView.builder(
-                itemCount: myController.firestoreUrlList.value?.urls?.length ?? 0,
+                itemCount: urlList.urls.length,
                 itemBuilder: (context, index) {
-                  final urls = myController.firestoreUrlList.value?.urls;
-                  if (urls != null && index < urls.length) {
+                  final urls = urlList.urls;
+                  if (index < urls.length) {
                     final urlModel = urls[index];
                     return ListTile(
                       title: Container(
@@ -51,7 +54,10 @@ class UrlListUI extends StatelessWidget {
                   }
                 },
               );
-
+            } else {
+              return ListTile(
+                title: Text('No data available'),
+              );
             }
           },
         ),
