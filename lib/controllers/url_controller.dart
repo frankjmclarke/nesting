@@ -8,6 +8,8 @@ import 'package:flutter_starter/models/models.dart';
 import 'package:flutter_starter/ui/auth/auth.dart';
 import 'package:flutter_starter/ui/ui.dart';
 import 'package:flutter_starter/ui/components/components.dart';
+import 'package:receive_sharing_intent/receive_sharing_intent.dart';
+import '../helpers/StringUtil.dart';
 import '../models/url_model.dart';
 
 class UrlController extends GetxController {
@@ -18,14 +20,42 @@ class UrlController extends GetxController {
   late TextEditingController emailController;
   late TextEditingController passwordController;
   final FirebaseFirestore _db = FirebaseFirestore.instance;
-    Rxn<UrlModelList> firestoreUrlList = Rxn<UrlModelList>();
-  //Rxn<List<UrlModel>> firestoreUrlList = Rxn<List<UrlModel>>();
+  Rxn<UrlModelList> firestoreUrlList = Rxn<UrlModelList>();
+  String _sharedText = "";
+  // Since firestoreUrlList is a Rxn<UrlModelList> (Reactive Extension), any
+  // widget that is listening to the urlList stream will be notified of the
+  // change and can update the UI accordingly.
+
   final RxBool admin = false.obs;
+  StreamSubscription<String>? _textStreamSubscription;
 
   Stream<UrlModelList> get urlList => firestoreUrlList.map(
         (urlList) =>
-        UrlModelList(urls: urlList!.urls.isNotEmpty ? urlList.urls : []),
-  );
+            UrlModelList(urls: urlList!.urls.isNotEmpty ? urlList.urls : []),
+      );
+
+  bool containsText(String text) {
+    final List<UrlModel>? urlList = firestoreUrlList.value?.urls;
+    if (urlList != null) {
+      return urlList.any((urlModel) => urlModel.url == text);
+    }
+    return false;
+  }
+
+  void _addTextToListIfUnique() {
+    if (!containsText(_sharedText)) {
+      UrlModelList currentList = firestoreUrlList.value ?? UrlModelList(urls: []);
+      currentList.urls.add(UrlModel(
+        uid: StringUtil.generateRandomId(15),
+        email: '',
+        name: '',
+        url: _sharedText,
+      ));
+      print ('currentList '+currentList.urls.length.toString());
+      firestoreUrlList.value = currentList;
+    }
+  }
+
 
   void onInit() {
     super.onInit();
@@ -33,12 +63,26 @@ class UrlController extends GetxController {
     emailController = TextEditingController();
     passwordController = TextEditingController();
     fetchUrlList().then((_) {
+      _textStreamSubscription =
+          ReceiveSharingIntent.getTextStream().listen((String text) {
+            _sharedText = text;
+            _addTextToListIfUnique();
+          });
+      //Receive text data when app is closed
+      ReceiveSharingIntent.getInitialText().then((String? text) {
+        if (text != null) {
+          _sharedText = text;
+          _addTextToListIfUnique();
+        }
+      });
       // Complete the future when fetchUrlList() finishes
-      _completer.complete();//manually complete the future associated with _completer.
+      _completer
+          .complete(); //manually complete the future associated with _completer.
     });
   }
 
   Completer<void> _completer = Completer<void>();
+
 // By calling onInitFuture(), you can wait for the completion of the tasks
 // performed in onInit() using the returned future.
   Future<void> onInitFuture() {
@@ -47,14 +91,14 @@ class UrlController extends GetxController {
 
   Future<void> fetchUrlList() async {
     final snapshot = await _db.collection('urls').get();
-    final urls = snapshot.docs.map((doc) => UrlModel.fromMap(doc.data())).toList();
+    final urls =
+        snapshot.docs.map((doc) => UrlModel.fromMap(doc.data())).toList();
     firestoreUrlList.value = UrlModelList(urls: urls);
-    print("fetchUrlList SUCCESS " );
+    print("fetchUrlList SUCCESS ");
   }
 
   @override
   void onReady() async {
-
     // Run every time Url List changes
     // ever(firestoreUrlList, handleUrlListChanged);
 
@@ -74,7 +118,8 @@ class UrlController extends GetxController {
 
   void handleUrlListChanged(UrlModelList? _firebaseUrlList) async {
     if (_firebaseUrlList != null) {
-      firestoreUrlList.bindStream(streamFirestoreUrlList() as Stream<UrlModelList?>);
+      firestoreUrlList
+          .bindStream(streamFirestoreUrlList() as Stream<UrlModelList?>);
       //await isAdmin();
     }
 
@@ -87,7 +132,8 @@ class UrlController extends GetxController {
   }
 
   Stream<UrlModelList> streamFirestoreUrlList() {
-    return _db.doc('/urls/${firebaseUrl.value!.uid}')
+    return _db
+        .doc('/urls/${firebaseUrl.value!.uid}')
         .snapshots()
         .map((snapshot) {
       List<Map> dataList = [snapshot.data()!];
@@ -95,7 +141,8 @@ class UrlController extends GetxController {
     });
   }
 
-  Future<void> updateUser(BuildContext context, UserModel user, String oldEmail, String password) async {
+  Future<void> updateUser(BuildContext context, UserModel user, String oldEmail,
+      String password) async {
     String _authUpdateUserNoticeTitle = 'auth.updateUserSuccessNoticeTitle'.tr;
     String _authUpdateUserNotice = 'auth.updateUserSuccessNotice'.tr;
     try {
@@ -151,14 +198,6 @@ class UrlController extends GetxController {
     update();
   }
 
-  void _createUserListFirestore(UrlModelList urls, User _firebaseUser) {
-    List<Map<String, dynamic>> jsonData = urls.toJson();
-    if (jsonData.isNotEmpty) {
-      _db.doc('/urls/${_firebaseUser.uid}').set(jsonData.first);
-    }
-    update();
-  }
-
   Future<void> sendPasswordResetEmail(BuildContext context) async {
     showLoadingIndicator();
     try {
@@ -192,10 +231,10 @@ class UrlController extends GetxController {
     try {
       // Create a new test UrlModel
       UrlModel testUrl = UrlModel(
-        uid: 'test_uid',
-        email: 'tester@test.com',
-        name: 'Test URL',
-        url: 'https://example.com',
+        uid: StringUtil.generateRandomId(15),
+        email: 'testy@testy.com',
+        name: 'Testing URL',
+        url: 'https://google.com',
       );
 
       // Convert the UrlModel to a JSON map

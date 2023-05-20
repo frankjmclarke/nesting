@@ -19,9 +19,13 @@ class UrlModel {
       url: data['url'] ?? '',
     );
   }
+
   @override
-  String toString() {
+  String getUrl() {
     return url; // Customize the string representation as per your requirements
+  }
+  String getEmail() {
+    return email; // Customize the string representation as per your requirements
   }
   Map<String, dynamic> toJson() =>
       {"uid": uid, "email": email, "name": name, "url": url};
@@ -44,5 +48,9 @@ class UrlModelList {
 
   bool get isNotEmpty => urls.isNotEmpty;
   UrlModel? get first => urls.isNotEmpty ? urls[0] : null;
+
+  void add(UrlModel urlModel) {
+    urls.add(urlModel);
+  }
 }
 

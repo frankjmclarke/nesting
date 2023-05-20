@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_starter/ui/ui.dart';
 import 'package:get/get.dart';
 import '../controllers/url_controller.dart';
-import '../helpers/StringUtil.dart';
-import '../models/url_model.dart';
-
 
 class UrlListUI extends StatelessWidget {
   final UrlController myController = Get.put(UrlController());
@@ -29,8 +25,24 @@ class UrlListUI extends StatelessWidget {
                 itemBuilder: (context, index) {
                   final urls = myController.firestoreUrlList.value?.urls;
                   if (urls != null && index < urls.length) {
+                    final urlModel = urls[index];
                     return ListTile(
-                      title: Text(urls[index].toString()),
+                      title: Container(
+                        width: MediaQuery.of(context).size.width,
+                        child: Text(
+                          urlModel.url,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      subtitle: Container(
+                        width: MediaQuery.of(context).size.width,
+                        child: Text(
+                          urlModel.name,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
                     );
                   } else {
                     return ListTile(
@@ -39,6 +51,7 @@ class UrlListUI extends StatelessWidget {
                   }
                 },
               );
+
             }
           },
         ),

@@ -21,7 +21,7 @@ dependencies:
   # apple_sign_in:
   get: ^4.6.5
   get_storage: ^2.1.1
-
+  receive_sharing_intent: ^1.4.5
   crypto: ^3.0.3
   http: ^0.13.6
   csv: ^5.0.2

@@ -1,4 +1,21 @@
+import 'dart:math';
+
 class StringUtil {
+
+  static String generateRandomId(int length) {
+    const characters =
+        'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    final random = Random();
+    final maxIndex = characters.length - 1;
+
+    String id = '';
+    for (int i = 0; i < length; i++) {
+      final randomIndex = random.nextInt(maxIndex);
+      id += characters[randomIndex];
+    }
+    return id;
+  }
+
   // Check if a string is empty or null
   static bool isNullOrEmpty(String? str) {
     return str == null || str.isEmpty;
@@ -22,9 +39,7 @@ class StringUtil {
     if (isNullOrEmpty(str)) {
       return str;
     }
-    return str.split(' ')
-        .map((word) => capitalize(word))
-        .join(' ');
+    return str.split(' ').map((word) => capitalize(word)).join(' ');
   }
 
   // Trim leading and trailing whitespace from a string
@@ -65,6 +80,7 @@ class StringUtil {
 
     return '$firstHalf...$secondHalf';
   }
+
   // Truncate a string with an ellipsis (...) if it exceeds the specified length
   static String ellipsis(String str, int length) {
     if (isNullOrEmpty(str) || str.length <= length) {
