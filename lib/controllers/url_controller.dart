@@ -90,10 +90,17 @@ class UrlController extends GetxController {
     return _completer.future;
   }
 
-  Future<void> fetchUrlList() async {
+  Future<void> fetchUrlListOld() async {
     final snapshot = await _db.collection('urls').get();
     final urls =
         snapshot.docs.map((doc) => UrlModel.fromMap(doc.data())).toList();
+    firestoreUrlList.value = UrlModelList(urls: urls);
+    print("fetchUrlList SUCCESS ");
+  }
+
+  Future<void> fetchUrlList() async {
+    final snapshot = await _db.collection('urls').snapshots().first;
+    final urls = snapshot.docs.map((doc) => UrlModel.fromMap(doc.data())).toList();
     firestoreUrlList.value = UrlModelList(urls: urls);
     print("fetchUrlList SUCCESS ");
   }
@@ -120,7 +127,7 @@ class UrlController extends GetxController {
   void handleUrlListChanged(UrlModelList? _firebaseUrlList) async {
     if (_firebaseUrlList != null) {
       firestoreUrlList
-          .bindStream(streamFirestoreUrlList() as Stream<UrlModelList?>);
+          .bindStream(streamFirestoreUrlList());
       //await isAdmin();
     }
 
