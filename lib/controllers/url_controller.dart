@@ -33,13 +33,14 @@ class UrlController extends GetxController {
     emailController = TextEditingController();
     passwordController = TextEditingController();
     fetchUrlList().then((_) {
-      // Complete the future when fetchData() finishes
-      _completer.complete();
+      // Complete the future when fetchUrlList() finishes
+      _completer.complete();//manually complete the future associated with _completer.
     });
   }
 
   Completer<void> _completer = Completer<void>();
-
+// By calling onInitFuture(), you can wait for the completion of the tasks
+// performed in onInit() using the returned future.
   Future<void> onInitFuture() {
     return _completer.future;
   }

@@ -19,7 +19,10 @@ class UrlModel {
       url: data['url'] ?? '',
     );
   }
-
+  @override
+  String toString() {
+    return url; // Customize the string representation as per your requirements
+  }
   Map<String, dynamic> toJson() =>
       {"uid": uid, "email": email, "name": name, "url": url};
 }
