@@ -51,7 +51,7 @@ class AuthController extends GetxController {
       print('Send to signin');
       Get.offAll(SignInUI());
     } else {
-      Get.offAll(UrlListUI());//HomeUI
+      Get.offAll(HomeUI());//HomeUI
     }
   }
 

@@ -4,65 +4,60 @@ import 'package:flutter_starter/ui/components/components.dart';
 import 'package:flutter_starter/ui/ui.dart';
 import 'package:get/get.dart';
 
-class HomeUI extends StatelessWidget {
+class HomeUI extends StatefulWidget {
+  @override
+  _HomeUIState createState() => _HomeUIState();
+}
+
+class _HomeUIState extends State<HomeUI> {
+  int _currentIndex = 0;
+
+  final List<Widget> _screens = [
+
+    UrlListUI(),
+    SettingsUI(),
+  ];
+
   @override
   Widget build(BuildContext context) {
     return GetBuilder<AuthController>(
       init: AuthController(),
       builder: (controller) => controller.firestoreUser.value!.uid == null
           ? Center(
-              child: CircularProgressIndicator(),
-            )
+        child: CircularProgressIndicator(),
+      )
           : Scaffold(
-              appBar: AppBar(
-                title: Text('home.title'.tr),
-                actions: [
-                  IconButton(
-                      icon: Icon(Icons.settings),
-                      onPressed: () {
-                        Get.to(SettingsUI());
-                      }),
-                ],
-              ),
-              body: Center(
-                child: Column(
-                  children: <Widget>[
-                    SizedBox(height: 120),
-                    Avatar(controller.firestoreUser.value!),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        FormVerticalSpace(),
-                        Text(
-                            'home.uidLabel'.tr +
-                                ': ' +
-                                controller.firestoreUser.value!.uid,
-                            style: TextStyle(fontSize: 16)),
-                        FormVerticalSpace(),
-                        Text(
-                            'home.nameLabel'.tr +
-                                ': ' +
-                                controller.firestoreUser.value!.name,
-                            style: TextStyle(fontSize: 16)),
-                        FormVerticalSpace(),
-                        Text(
-                            'home.emailLabel'.tr +
-                                ': ' +
-                                controller.firestoreUser.value!.email,
-                            style: TextStyle(fontSize: 16)),
-                        FormVerticalSpace(),
-                        Text(
-                            'home.adminUserLabel'.tr +
-                                ': ' +
-                                controller.admin.value.toString(),
-                            style: TextStyle(fontSize: 16)),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
+        appBar: AppBar(
+          title: Text('home.title'.tr),
+          actions: [
+            IconButton(
+              icon: Icon(Icons.settings),
+              onPressed: () {
+                Get.to(SettingsUI());
+              },
             ),
+          ],
+        ),
+        body: _screens[_currentIndex],
+        bottomNavigationBar: BottomNavigationBar(
+          currentIndex: _currentIndex,
+          onTap: (index) {
+            setState(() {
+              _currentIndex = index;
+            });
+          },
+          items: [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.list),
+              label: 'UrlList',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.settings),
+              label: 'Settings',
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
