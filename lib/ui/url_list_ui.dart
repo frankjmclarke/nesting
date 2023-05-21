@@ -76,6 +76,12 @@ class UrlListUI extends StatelessWidget {
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
+                        trailing: IconButton(
+                          icon: Icon(Icons.edit),
+                          onPressed: () {
+                            _editUrlModel(context, urlModel);
+                          },
+                        ),
                       ),
                     ),
                   );
@@ -87,4 +93,102 @@ class UrlListUI extends StatelessWidget {
       ),
     );
   }
+
+  void _editUrlModel(BuildContext context, UrlModel urlModel) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => EditUrlScreen(urlModel: urlModel, urlController: urlController,),
+      ),
+    );
+  }
+}
+
+class EditUrlScreen extends StatefulWidget {
+  final UrlModel urlModel;
+  final UrlController urlController;
+
+  EditUrlScreen({required this.urlModel, required this.urlController});
+
+  @override
+  _EditUrlScreenState createState() => _EditUrlScreenState();
+}
+
+
+class _EditUrlScreenState extends State<EditUrlScreen> {
+  TextEditingController _nameController = TextEditingController();
+  TextEditingController _urlController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _nameController.text = widget.urlModel.name;
+    _urlController.text = widget.urlModel.url;
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _urlController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Edit Url'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Name:'),
+            TextFormField(
+              controller: _nameController,
+            ),
+            SizedBox(height: 16.0),
+            Text('URL:'),
+            TextFormField(
+              controller: _urlController,
+            ),
+            SizedBox(height: 16.0),
+            ElevatedButton(
+              onPressed: () {
+                _saveChanges(context);
+              },
+              child: Text('Save Changes'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _saveChanges(BuildContext context) {
+    String name = _nameController.text.trim();
+    String url = _urlController.text.trim();
+
+    // Perform validation
+    if (name.isEmpty || url.isEmpty) {
+      // Display an error message or show a snackbar indicating missing fields
+      return;
+    }
+
+    // Create a new UrlModel with the updated values
+    UrlModel updatedUrlModel = UrlModel(
+      uid: widget.urlModel.uid,
+      email: widget.urlModel.email,
+      name: name,
+      url: url,
+    );
+
+    // Call the updateUrl method in the UrlController to save the changes
+    widget.urlController.updateUrl(updatedUrlModel);
+
+    // Navigate back to the previous screen
+    Navigator.pop(context);
+  }
+
 }

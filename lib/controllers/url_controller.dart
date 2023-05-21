@@ -4,8 +4,6 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_starter/ui/auth/auth.dart';
-import 'package:flutter_starter/ui/ui.dart';
 import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 import '../helpers/StringUtil.dart';
 import '../models/url_model.dart';
@@ -148,4 +146,42 @@ class UrlController extends GetxController {
       print('Error deleting UrlModel: $error');
     }
   }
+  Future<void> updateUrl(UrlModel updatedUrl) async {
+    try {
+      // Convert the updated UrlModel to a JSON map
+      final jsonData = updatedUrl.toJson();
+
+      // Update the URL document in Firestore
+      await _db.collection('urls').doc(updatedUrl.uid).update(jsonData);
+
+      print('URL updated successfully');
+    } catch (error) {
+      print('Error updating URL: $error');
+    }
+  }
+  void updateUrl2(UrlModel updatedUrlModel) async {
+    final index = firestoreUrlList.value!.urls.indexWhere((url) => url.uid == updatedUrlModel.uid);
+
+    if (index != -1) {
+      firestoreUrlList.value!.urls[index] = updatedUrlModel;
+
+      // Convert the UrlModelList to a JSON representation
+      final jsonData = firestoreUrlList.value!.toJson();
+
+      try {
+        // Save the updated list to Firestore
+        await FirebaseFirestore.instance
+            .collection('urls')
+            .doc(StringUtil.generateRandomId(12))
+            .update(jsonData as Map<Object, Object?>);
+
+        // Refresh the UI
+        firestoreUrlList.refresh();
+      } catch (error) {
+        // Handle any errors that occur during the Firestore operation
+        print('Error updating URL: $error');
+      }
+    }
+  }
+
 }
