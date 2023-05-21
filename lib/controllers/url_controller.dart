@@ -183,5 +183,26 @@ class UrlController extends GetxController {
       }
     }
   }
+  bool saveChanges(UrlModel updatedUrlModel) {
+    if (updatedUrlModel.name.isEmpty || updatedUrlModel.url.isEmpty) {
+      // Display an error message or show a snackbar indicating missing fields
+      return false;
+    }
+    updateUrl(updatedUrlModel);
+    return true;
+  }
 
+  void saverChanges(UrlModel updatedUrlModel) async {
+    try {
+      // Convert the updated UrlModel to a JSON map
+      final jsonData = updatedUrlModel.toJson();
+
+      // Update the URL document in Firestore
+      await _db.collection('urls').doc(updatedUrlModel.uid).update(jsonData);
+
+      print('URL updated successfully');
+    } catch (error) {
+      print('Error updating URL: $error');
+    }
+  }
 }
