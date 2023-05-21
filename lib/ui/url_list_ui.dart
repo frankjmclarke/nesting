@@ -28,21 +28,60 @@ class UrlListUI extends StatelessWidget {
                   final urls = urlList.urls;
                   if (index < urls.length) {
                     final urlModel = urls[index];
-                    return ListTile(
-                      title: Container(
-                        width: MediaQuery.of(context).size.width,
-                        child: Text(
-                          urlModel.url,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
+                    return Dismissible(
+                      key: Key(urlModel.uid), // Use a unique key for each item
+                      background: Container(
+                        color: Colors.red, // Customize the background color
+                        alignment: Alignment.centerRight,
+                        padding: EdgeInsets.only(right: 16.0),
+                        child: Icon(
+                          Icons.delete,
+                          color: Colors.white,
                         ),
                       ),
-                      subtitle: Container(
-                        width: MediaQuery.of(context).size.width,
-                        child: Text(
-                          urlModel.name,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
+                      confirmDismiss: (direction) async {
+                        return await showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: Text('Delete Item'),
+                              content: Text('Are you sure you want to delete this item?'),
+                              actions: <Widget>[
+                                TextButton(
+                                  onPressed: () => Navigator.of(context).pop(false),
+                                  child: Text('Cancel'),
+                                ),
+                                TextButton(
+                                  onPressed: () => Navigator.of(context).pop(true),
+                                  child: Text('Delete'),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      },
+                      onDismissed: (direction) {
+                        // Remove the item from the list when dismissed
+                        myController.deleteUrl(urlModel);
+                      },
+                      child: Card(
+                        child: ListTile(
+                          title: Container(
+                            width: MediaQuery.of(context).size.width,
+                            child: Text(
+                              urlModel.url,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                          subtitle: Container(
+                            width: MediaQuery.of(context).size.width,
+                            child: Text(
+                              urlModel.name,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
                         ),
                       ),
                     );

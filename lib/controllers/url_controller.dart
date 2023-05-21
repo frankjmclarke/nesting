@@ -89,7 +89,15 @@ class UrlController extends GetxController {
   Future<void> onInitFuture() {
     return _completer.future;
   }
-
+/*
+The initial fetch of the urls collection from Firestore is done using get() method.
+After fetching the initial data, we set the value of firestoreUrlList to the retrieved UrlModelList.
+We then listen to changes in the Firestore collection using the snapshots() method.
+Whenever there's an update in the Firestore collection, the listener is triggered.
+Inside the listener, we update the value of firestoreUrlList with the updated UrlModelList.
+With this update, the UrlListUI widget should now react to changes in
+firestoreUrlList and update the UI accordingly.
+ */
   Future<void> fetchUrlList() async {
     final snapshot = await _db.collection('urls').get();
     final urls = snapshot.docs.map((doc) => UrlModel.fromMap(doc.data())).toList();
@@ -258,4 +266,16 @@ class UrlController extends GetxController {
       print('Error inserting test URL: $error');
     }
   }
+
+  Future<void> deleteUrl(UrlModel urlModel) async {
+    try {
+      // Delete the UrlModel from Firestore
+      await _db.collection('urls').doc(urlModel.uid).delete();
+      print('UrlModel deleted successfully');
+    } catch (error) {
+      print('Error deleting UrlModel: $error');
+    }
+  }
+
+
 }
