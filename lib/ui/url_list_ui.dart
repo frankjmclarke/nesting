@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controllers/url_controller.dart';
 import '../models/url_model.dart';
+import 'edit_url_ui.dart';
 
 class UrlListUI extends StatelessWidget {
   final UrlController urlController = Get.put(UrlController());
@@ -100,75 +101,5 @@ class UrlListUI extends StatelessWidget {
 
   void _editUrlModel(UrlModel urlModel) {
     Get.to(EditUrlScreen(urlModel: urlModel, urlController: urlController));
-  }
-}
-
-class EditUrlScreen extends StatefulWidget {
-  final UrlModel urlModel;
-  final UrlController urlController;
-
-  EditUrlScreen({required this.urlModel, required this.urlController});
-
-  @override
-  _EditUrlScreenState createState() => _EditUrlScreenState();
-}
-
-class _EditUrlScreenState extends State<EditUrlScreen> {
-  late TextEditingController _nameController;
-  late TextEditingController _urlController;
-
-  @override
-  void initState() {
-    super.initState();
-    _nameController = TextEditingController(text: widget.urlModel.name);
-    _urlController = TextEditingController(text: widget.urlModel.url);
-  }
-
-  @override
-  void dispose() {
-    _nameController.dispose();
-    _urlController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Edit Url'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Name:'),
-            TextFormField(
-              controller: _nameController,
-            ),
-            SizedBox(height: 16.0),
-            Text('URL:'),
-            TextFormField(
-              controller: _urlController,
-            ),
-            SizedBox(height: 16.0),
-            ElevatedButton(
-              onPressed: () {
-                UrlModel updatedUrlModel = UrlModel(
-                  uid: widget.urlModel.uid,
-                  email: widget.urlModel.email,
-                  name: _nameController.text.trim(),
-                  url: _urlController.text.trim(),
-                );
-                if (widget.urlController.saveChanges(updatedUrlModel)) {
-                  Get.back();
-                }
-              },
-              child: Text('Save Changes'),
-            ),
-          ],
-        ),
-      ),
-    );
   }
 }
