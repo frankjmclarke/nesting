@@ -77,6 +77,23 @@ class UrlListUI extends StatelessWidget {
         urlController.deleteUrl(urlModel);
       },
       child: Card(
+        child: Row(
+          children: [
+          SizedBox(
+          height: 56,
+          width: 56.0, // Set the width equal to the height of the card
+          child: ClipRRect(
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(4.0), // Adjust the border radius as needed
+              bottomLeft: Radius.circular(4.0), // Adjust the border radius as needed
+            ),
+            child: Image.network(
+              'https://images.ctfassets.net/m8onsx4mm13s/6JEns3QGHSdqgaQ8i1EyF6/fa052ce2406881e26c0162cf04980ef5/__static.gibson.com_product-images_Epiphone_EPIKNE179_TV_Yellow_EILPTVNH1_front.jpg?h=900', // Replace with your image URL
+              fit: BoxFit.cover, // Crop and center the image
+            ),
+          ),
+        ),
+    Expanded(
         child: ListTile(
           title: Text(
             urlModel.url,
@@ -94,6 +111,9 @@ class UrlListUI extends StatelessWidget {
               _editUrlModel(urlModel);
             },
           ),
+        ),
+    ),
+          ],
         ),
       ),
     );

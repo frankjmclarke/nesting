@@ -25,7 +25,6 @@ class _EditUrlScreenState extends State<EditUrlScreen> {
   late TextEditingController _urlController;
   late WebViewController _webViewController;
 
-
   @override
   void initState() {
     super.initState();
@@ -34,12 +33,12 @@ class _EditUrlScreenState extends State<EditUrlScreen> {
       ..setNavigationDelegate(NavigationDelegate(
         onPageStarted: (url) {
           setState(() {
-           // loadingPercentage = 0;
+            // loadingPercentage = 0;
           });
         },
         onPageFinished: (url) {
           setState(() {
-          //  loadingPercentage = 100;
+            //  loadingPercentage = 100;
           });
           _fetchHtmlText();
         },
@@ -54,27 +53,30 @@ class _EditUrlScreenState extends State<EditUrlScreen> {
 
   Future<void> _fetchHtmlText() async {
     try {
-      final response = await HttpClient().getUrl(Uri.parse(widget.urlModel.url));
+      final response =
+          await HttpClient().getUrl(Uri.parse(widget.urlModel.url));
       final responseBody = await response.close();
       final htmlBytes = await responseBody.toList();
 
-      final htmlText = String.fromCharCodes(htmlBytes.expand((byteList) => byteList));
-print ("WWWWW"+widget.urlModel.url);
-      final imageUrl = await getImageUrl(htmlText);  // Await the getImageUrl function call
+      final htmlText =
+          String.fromCharCodes(htmlBytes.expand((byteList) => byteList));
+      print("WWWWW" + widget.urlModel.url);
+      final imageUrl =
+          await getImageUrl(htmlText); // Await the getImageUrl function call
       print("IIIIIIIIIIIII $imageUrl");
-      var lo=findLongitude(htmlText);
-      var la=findLatitude(htmlText);
-      print('SSSS '+la +" LONG "+lo);
-      var addr=await getAddressFromLatLng(double.parse(la),double.parse(lo));
-      print("IIIII+imagIIIIIIII "+addr);
+      var lo = findLongitude(htmlText);
+      var la = findLatitude(htmlText);
+      print('SSSS ' + la + " LONG " + lo);
+      var addr = await getAddressFromLatLng(double.parse(la), double.parse(lo));
+      print("IIIII+imagIIIIIIII " + addr);
       setState(() {
-
         parseAddressSimple(htmlText);
       });
     } catch (error) {
       print('Error fetching HTML: $error');
     }
   }
+
   @override
   void dispose() {
     _nameController.dispose();
@@ -84,8 +86,7 @@ print ("WWWWW"+widget.urlModel.url);
 
   void _onUrlChanged() {
     setState(() {
-
-   //   controller.loadRequest(_urlController.text as Uri);
+      //   controller.loadRequest(_urlController.text as Uri);
     });
   }
 
