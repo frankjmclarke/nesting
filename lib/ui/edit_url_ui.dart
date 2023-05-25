@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import '../controllers/url_controller.dart';
 import '../helpers/canada_address.dart';
+import '../helpers/image.dart';
 import '../helpers/maps.dart';
 import '../models/url_model.dart';
 
@@ -23,7 +24,7 @@ class _EditUrlScreenState extends State<EditUrlScreen> {
   late TextEditingController _nameController;
   late TextEditingController _urlController;
   late WebViewController _webViewController;
-  var htmlText;
+
 
   @override
   void initState() {
@@ -50,20 +51,25 @@ class _EditUrlScreenState extends State<EditUrlScreen> {
     _urlController = TextEditingController(text: widget.urlModel.url);
     _urlController.addListener(_onUrlChanged);
   }
+
   Future<void> _fetchHtmlText() async {
     try {
       final response = await HttpClient().getUrl(Uri.parse(widget.urlModel.url));
       final responseBody = await response.close();
       final htmlBytes = await responseBody.toList();
-      final decodedHtml = String.fromCharCodes(htmlBytes.expand((byteList) => byteList));
-      setState(() {
-        htmlText = decodedHtml;
-        parseAddressSimple(htmlText);
-        var lo=findLongitude(htmlText);
-        var la=findLatitude(htmlText);
-        print('SSSS '+la +"LONG "+lo);
-        var addr=getAddressFromLatLng(double.parse(la),double.parse(lo));
 
+      final htmlText = String.fromCharCodes(htmlBytes.expand((byteList) => byteList));
+print ("WWWWW"+widget.urlModel.url);
+      final imageUrl = await getImageUrl(htmlText);  // Await the getImageUrl function call
+      print("IIIIIIIIIIIII $imageUrl");
+      var lo=findLongitude(htmlText);
+      var la=findLatitude(htmlText);
+      print('SSSS '+la +" LONG "+lo);
+      var addr=await getAddressFromLatLng(double.parse(la),double.parse(lo));
+      print("IIIII+imagIIIIIIII "+addr);
+      setState(() {
+
+        parseAddressSimple(htmlText);
       });
     } catch (error) {
       print('Error fetching HTML: $error');
