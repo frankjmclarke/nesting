@@ -11,10 +11,11 @@ class EditUrlScreen extends StatefulWidget {
   EditUrlScreen({required this.urlModel, required this.urlController});
 
   @override
-  _EditUrlScreenState createState() => _EditUrlScreenState();
+  State<EditUrlScreen> createState() => _EditUrlScreenState();
 }
 
 class _EditUrlScreenState extends State<EditUrlScreen> {
+  late final WebViewController controller;
   late TextEditingController _nameController;
   late TextEditingController _urlController;
   late WebViewController _webViewController;
@@ -22,6 +23,27 @@ class _EditUrlScreenState extends State<EditUrlScreen> {
   @override
   void initState() {
     super.initState();
+    controller = WebViewController()
+      ..setNavigationDelegate(NavigationDelegate(
+        onPageStarted: (url) {
+          setState(() {
+            //loadingPercentage = 0;
+          });
+        },
+        onProgress: (progress) {
+          setState(() {
+            //loadingPercentage = progress;
+          });
+        },
+        onPageFinished: (url) {
+          setState(() {
+            //loadingPercentage = 100;
+          });
+        },
+      ))
+      ..loadRequest(
+        Uri.parse(widget.urlModel.url),
+      );
     _nameController = TextEditingController(text: widget.urlModel.name);
     _urlController = TextEditingController(text: widget.urlModel.url);
     _urlController.addListener(_onUrlChanged);
@@ -34,20 +56,10 @@ class _EditUrlScreenState extends State<EditUrlScreen> {
     super.dispose();
   }
 
-  void _loadWebView() {
-    if (_webViewController != null && _urlController.text.trim().isNotEmpty) {
-      _webViewController.loadUrl('about:blank').then((value) {
-        Future.delayed(const Duration(milliseconds: 10), () {
-          print('LOADWEBVIEW '+_urlController.text.trim());
-          _webViewController.loadUrl(_urlController.text.trim());
-        });
-      });
-    }
-  }
-
   void _onUrlChanged() {
     setState(() {
-      _loadWebView();
+
+   //   controller.loadRequest(_urlController.text as Uri);
     });
   }
 
@@ -93,22 +105,8 @@ class _EditUrlScreenState extends State<EditUrlScreen> {
             ),
           ),
           Expanded(
-            child: WebView(
-              initialUrl: _urlController.text.trim(),
-              javascriptMode: JavascriptMode.unrestricted,
-              onWebViewCreated: (WebViewController controller) {
-                _webViewController = controller;
-                _loadWebView();
-              },
-              onPageFinished: (String url) {
-                print('Page finished loading: $url');
-              },
-              onPageStarted: (String url) {
-                print('Page started loading: $url');
-              },
-              onWebResourceError: (WebResourceError error) {
-                print('Web resource error: $error');
-              },
+            child: WebViewWidget(
+              controller: controller,
             ),
           ),
         ],

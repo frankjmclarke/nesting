@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:receive_sharing_intent/receive_sharing_intent.dart';
-import '../helpers/StringUtil.dart';
+import '../helpers/string_util.dart';
 import '../models/url_model.dart';
 
 class UrlController extends GetxController {
