@@ -27,6 +27,7 @@ dependencies:
   csv: ^5.0.2
   webview_flutter: ^4.2.1
   html: ^0.15.3
+  flutter_dotenv: ^5.0.0
 
 dependency_overrides:
   # analyzer: 1.4.0
@@ -39,3 +40,4 @@ flutter:
   assets:
     - assets/images/default.png
     - assets/images/defaultDark.png
+    - .env

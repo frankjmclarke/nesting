@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 //import 'package:firebase_analytics/firebase_analytics.dart';
 //import 'package:firebase_analytics/observer.dart';
 import 'package:flutter_starter/controllers/controllers.dart';
@@ -11,6 +12,7 @@ import 'package:get_storage/get_storage.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load();
   await Firebase.initializeApp();
   await GetStorage.init();
   Get.put<AuthController>(AuthController());//registers an instance of the AuthController class as a dependency, making it available for other parts of the application to use.

@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import '../controllers/url_controller.dart';
 import '../helpers/canada_address.dart';
+import '../helpers/maps.dart';
 import '../models/url_model.dart';
 
 class EditUrlScreen extends StatefulWidget {
@@ -61,6 +62,8 @@ class _EditUrlScreenState extends State<EditUrlScreen> {
         var lo=findLongitude(htmlText);
         var la=findLatitude(htmlText);
         print('SSSS '+la +"LONG "+lo);
+        var addr=getAddressFromLatLng(double.parse(la),double.parse(lo));
+
       });
     } catch (error) {
       print('Error fetching HTML: $error');
