@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import '../controllers/url_controller.dart';
+import '../helpers/canada_address.dart';
 import '../models/url_model.dart';
 
 class EditUrlScreen extends StatefulWidget {
@@ -19,26 +22,24 @@ class _EditUrlScreenState extends State<EditUrlScreen> {
   late TextEditingController _nameController;
   late TextEditingController _urlController;
   late WebViewController _webViewController;
+  var htmlText;
 
   @override
   void initState() {
     super.initState();
     controller = WebViewController()
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
       ..setNavigationDelegate(NavigationDelegate(
         onPageStarted: (url) {
           setState(() {
-            //loadingPercentage = 0;
-          });
-        },
-        onProgress: (progress) {
-          setState(() {
-            //loadingPercentage = progress;
+           // loadingPercentage = 0;
           });
         },
         onPageFinished: (url) {
           setState(() {
-            //loadingPercentage = 100;
+          //  loadingPercentage = 100;
           });
+          _fetchHtmlText();
         },
       ))
       ..loadRequest(
@@ -48,7 +49,23 @@ class _EditUrlScreenState extends State<EditUrlScreen> {
     _urlController = TextEditingController(text: widget.urlModel.url);
     _urlController.addListener(_onUrlChanged);
   }
-
+  Future<void> _fetchHtmlText() async {
+    try {
+      final response = await HttpClient().getUrl(Uri.parse(widget.urlModel.url));
+      final responseBody = await response.close();
+      final htmlBytes = await responseBody.toList();
+      final decodedHtml = String.fromCharCodes(htmlBytes.expand((byteList) => byteList));
+      setState(() {
+        htmlText = decodedHtml;
+        parseAddressSimple(htmlText);
+        var lo=findLongitude(htmlText);
+        var la=findLatitude(htmlText);
+        print('SSSS '+la +"LONG "+lo);
+      });
+    } catch (error) {
+      print('Error fetching HTML: $error');
+    }
+  }
   @override
   void dispose() {
     _nameController.dispose();

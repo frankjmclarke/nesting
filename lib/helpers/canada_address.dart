@@ -1,4 +1,5 @@
-
+import 'package:html/parser.dart' as parser;
+import 'package:html/dom.dart' as dom;
 /*
 String? parseAddress(String htmlContent) {
   final document = htmlParser.parse(htmlContent);
@@ -22,7 +23,8 @@ String? extractCanadaAddress(String addressText) {
   ^[ABCEGHJ-NPRSTVXY][0-9][ABCEGHJ-NPRSTV-Z][ ]?[0-9][ABCEGHJ-NPRSTV-Z][0-9]$
   */
 
-  RegExp canadaAddressRegex = RegExp(r'(\d+)\s+([A-Za-z]+\s+){1,5}(Street|Avenue|Road|Boulevard)\s*,\s*([A-Za-z\s]+)\s*(,|,)\s*([A-Za-z\s]+)\s*(\w{1}\d{1}\w{1}\s*\d{1}\w{1}\d{1})');
+  RegExp canadaAddressRegex = RegExp(
+      r'(\d+)\s+([A-Za-z]+\s+){1,5}(Street|Avenue|Road|Boulevard)\s*,\s*([A-Za-z\s]+)\s*(,|,)\s*([A-Za-z\s]+)\s*(\w{1}\d{1}\w{1}\s*\d{1}\w{1}\d{1})');
   Match? match = canadaAddressRegex.firstMatch(addressText);
   if (match != null) {
     String streetNumber = match.group(1)!;
@@ -42,7 +44,8 @@ String? searchForCanadaAddress(String htmlContent) {
   // You can use string manipulation or regular expressions to search for the address
   // This is just a simple example, you may need to modify it based on your specific use case
 
-  RegExp canadaAddressRegex = RegExp(r'(\d+)\s+([A-Za-z]+\s+){1,5}(Street|Avenue|Road|Boulevard)\s*,\s*([A-Za-z\s]+)\s*(,|,)\s*([A-Za-z\s]+)\s*(\w{1}\d{1}\w{1}\s*\d{1}\w{1}\d{1})');
+  RegExp canadaAddressRegex = RegExp(
+      r'(\d+)\s+([A-Za-z]+\s+){1,5}(Street|Avenue|Road|Boulevard)\s*,\s*([A-Za-z\s]+)\s*(,|,)\s*([A-Za-z\s]+)\s*(\w{1}\d{1}\w{1}\s*\d{1}\w{1}\d{1})');
   Match? match = canadaAddressRegex.firstMatch(htmlContent);
   if (match != null) {
     String streetNumber = match.group(1)!;
@@ -56,6 +59,7 @@ String? searchForCanadaAddress(String htmlContent) {
 
   return null;
 }
+
 void parseAddressSimple(String text) {
   // Split the text into individual words
   List<String> words = text.split(' ');
@@ -66,7 +70,9 @@ void parseAddressSimple(String text) {
   for (int i = 0; i < words.length; i++) {
     String word = words[i];
 
-    if (isNumeric(removeHyphens(word)) && i < words.length - 2 && isStreetIdentifier(words[i + 2])) {
+    if (isNumeric(removeHyphens(word)) &&
+        i < words.length - 2 &&
+        isStreetIdentifier(words[i + 2])) {
       // Found a numeric value followed by a street identifier (e.g., 123 Main)
       streetAddress = word + ' ' + words[i + 1] + ' ' + words[i + 2];
       addressIndex = i;
@@ -94,7 +100,6 @@ void parseAddressSimple(String text) {
   }
 }
 
-
 String removeMultipleSpaces(String text) {
   return text.replaceAll(RegExp(r'\s+'), ' ');
 }
@@ -105,13 +110,12 @@ String replaceSpacesWithHyphen(String text) {
 
   // Iterate through the words to find adjacent numbers
   for (int i = 0; i < words.length - 1; i++) {
-
     String currentWord = words[i];
     String nextWord = words[i + 1];
     //  print (currentWord);
 
     // Check if the current word and the next word are numeric
-    if (isNumeric(removeHyphens(currentWord))  && isNumeric(nextWord) ) {
+    if (isNumeric(removeHyphens(currentWord)) && isNumeric(nextWord)) {
       // Replace the space between the numbers with a hyphen
       words[i] = currentWord.trimRight() + '-' + nextWord;
       // print(currentWord.trimRight() + '-' + nextWord);
@@ -129,15 +133,102 @@ String replaceSpacesWithHyphen(String text) {
 String removeHyphens(String text) {
   return text.replaceAll('-', '');
 }
+
 bool isNumeric(String value) {
   final numericRegex = RegExp(r'^-?(([0-9]*)|(([0-9]*)\.([0-9]*)))$');
   return numericRegex.hasMatch(value);
 }
 
 bool isStreetIdentifier(String value) {
-  final streetIdentifiers = ['Street', 'St', 'Highway', 'Hwy', 'Avenue', 'Ave', 'Road', 'Rd', 'Boulevard', 'Blv.', 'Lane', 'L.', 'Place', 'Pl', 'Court', 'Ct'];
+  final streetIdentifiers = [
+    'Street',
+    'St',
+    'Highway',
+    'Hwy',
+    'Avenue',
+    'Ave',
+    'Road',
+    'Rd',
+    'Boulevard',
+    'Blv.',
+    'Lane',
+    'L.',
+    'Place',
+    'Pl',
+    'Court',
+    'Ct'
+  ];
   return streetIdentifiers.contains(value);
 }
+
 String removePunctuation(String input) {
   return input.replaceAll(RegExp(r'[^\w\s]'), '');
+}
+
+////////////////////////////
+Future<String> getLocationFromHTML(String htmlContent) async {
+  final document = parser.parse(htmlContent);
+  final scriptTags = document.getElementsByTagName('script');
+
+  for (dom.Element scriptTag in scriptTags) {
+    final scriptContent = scriptTag.innerHtml;
+
+    if (scriptContent.contains('LatLng')) {
+      // Extract the LatLng information from the script content
+      final regex = RegExp(r'LatLng\(([^)]+)\)');
+      final match = regex.firstMatch(scriptContent);
+      if (match != null) {
+        final latLng = match.group(1);
+
+        // Split the LatLng into latitude and longitude
+        final coordinates = latLng?.split(',');
+        final latitude = coordinates?[0].trim();
+        final longitude = coordinates?[1].trim();
+        print('Latitude: $latitude, Longitude: $longitude');
+        return 'Latitude: $latitude, Longitude: $longitude';
+      }
+    }
+  }
+  print('ZZZZZZZZZZZZZZZZZZZ');
+  return ''; // Location not found
+}
+String findLatitude(String inputString) {
+  final longitudeIndex = inputString.indexOf("data-latitude");
+  if (longitudeIndex != -1) {
+    final quoteIndex = inputString.indexOf('"', longitudeIndex);
+    if (quoteIndex != -1) {
+      final startingIndex = quoteIndex + 1;
+      final endingIndex = inputString.indexOf('"', startingIndex);
+      if (endingIndex != -1) {
+        final longitude = inputString.substring(startingIndex, endingIndex);
+        return longitude;
+      }
+    }
+  }
+  return 'XXXXXXXXXXXXXX'; // Longitude not found
+}
+
+String findLongitude(String inputString) {
+  final longitudeIndex = inputString.indexOf("data-longitude");
+  if (longitudeIndex != -1) {
+    final quoteIndex = inputString.indexOf('"', longitudeIndex);
+    if (quoteIndex != -1) {
+      final startingIndex = quoteIndex + 1;
+      final endingIndex = inputString.indexOf('"', startingIndex);
+      if (endingIndex != -1) {
+        final longitude = inputString.substring(startingIndex, endingIndex);
+        return longitude;
+      }
+    }
+  }
+  return 'XXXXXXXXXXXXXX'; // Longitude not found
+}
+
+void getLocationFromHTMLFile(String htmlContent) async {
+  try {
+    final location = await getLocationFromHTML(htmlContent);
+    print(location);
+  } catch (e) {
+    print('Error: $e');
+  }
 }
