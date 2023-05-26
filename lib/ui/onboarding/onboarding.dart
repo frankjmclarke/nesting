@@ -229,7 +229,8 @@ class _OnboardingUIState extends State<OnboardingUI> {
       color: defaultProceedButtonColor,
       child: InkWell(
         borderRadius: defaultProceedButtonBorderRadius,
-        onTap: () {//https://medium.com/@iamrutudhvaj/getx-flutter-b3781be2b644
+        onTap: () {
+          //https://medium.com/@iamrutudhvaj/getx-flutter-b3781be2b644
           Get.to(UrlListUI());
           //Get.back();
           //Get.toNamed("/second");
@@ -260,9 +261,10 @@ class _OnboardingUIState extends State<OnboardingUI> {
           pages: onboardingPagesList,
           onPageChange: (int pageIndex) {
             index = pageIndex;
-            if (index==2 && indexPrev==2)
-              Get.to(UrlListUI());
-            indexPrev=index;
+            if (index == 2 && indexPrev == 2) {
+              Get.to(UrlListUI()); //off the edge
+            }
+            indexPrev = index;
           },
           startPageIndex: 0,
           footerBuilder: (context, dragDistance, pagesLength, setIndex) {
@@ -282,16 +284,15 @@ class _OnboardingUIState extends State<OnboardingUI> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       CustomIndicator(
-                        netDragPercent: dragDistance,
-                        pagesLength: pagesLength,
+                          netDragPercent: dragDistance,
+                          pagesLength: pagesLength,
                           indicator: Indicator(
                             indicatorDesign: IndicatorDesign.polygon(
                               polygonDesign: PolygonDesign(
                                 polygon: DesignType.polygon_circle,
                               ),
                             ),
-                          )
-                      ),
+                          )),
                       index == pagesLength - 1
                           ? _signupButton
                           : _skipButton(setIndex: setIndex)
