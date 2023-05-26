@@ -13,6 +13,8 @@ class UrlModel {
   final int size;
   final String note;
   final String features;
+  final String phoneNumber; // Added field
+  final String price; // Added field
 
   UrlModel({
     required this.uid,
@@ -27,6 +29,8 @@ class UrlModel {
     required this.size,
     required this.note,
     required this.features,
+    required this.phoneNumber, // Added field
+    required this.price, // Added field
   });
 
   Map<String, dynamic> toMap() {
@@ -43,6 +47,8 @@ class UrlModel {
       'size': size,
       'note': note,
       'features': features,
+      'phoneNumber': phoneNumber, // Added field
+      'price': price, // Added field
     };
   }
 
@@ -60,6 +66,8 @@ class UrlModel {
       size: data['size'] ?? 0,
       note: data['note'] ?? '',
       features: data['features'] ?? '',
+      phoneNumber: data['phoneNumber'] ?? '', // Added field
+      price: data['price'] ?? '', // Added field
     );
   }
 
@@ -77,19 +85,21 @@ class UrlModel {
   }
 
   Map<String, dynamic> toJson() => {
-        "uid": uid,
-        "email": email,
-        "name": name,
-        "url": url,
-        "imageUrl": imageUrl,
-        "address": address,
-        "quality": quality,
-        "distance": distance,
-        "value": value,
-        "size": size,
-        "note": note,
-        "features": features,
-      };
+    "uid": uid,
+    "email": email,
+    "name": name,
+    "url": url,
+    "imageUrl": imageUrl,
+    "address": address,
+    "quality": quality,
+    "distance": distance,
+    "value": value,
+    "size": size,
+    "note": note,
+    "features": features,
+    "phoneNumber": phoneNumber, // Added field
+    "price": price, // Added field
+  };
 }
 
 class UrlModelList {
@@ -99,7 +109,7 @@ class UrlModelList {
 
   factory UrlModelList.fromList(List<Map> dataList) {
     List<UrlModel> urlModels =
-        dataList.map((data) => UrlModel.fromMap(data)).toList(growable: false);
+    dataList.map((data) => UrlModel.fromMap(data)).toList(growable: false);
     return UrlModelList(urls: urlModels);
   }
 

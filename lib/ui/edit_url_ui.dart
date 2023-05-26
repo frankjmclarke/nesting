@@ -19,8 +19,11 @@ class EditUrlScreen extends StatefulWidget {
 
 class _EditUrlScreenState extends State<EditUrlScreen> {
   late final WebViewController controller;
+  late TextEditingController _addressController;
+  late TextEditingController _priceController;
+  late TextEditingController _phoneController;
+  late TextEditingController _emailController;
   late TextEditingController _nameController;
-  late TextEditingController _urlController;
 
   @override
   void initState() {
@@ -43,10 +46,14 @@ class _EditUrlScreenState extends State<EditUrlScreen> {
       ..loadRequest(
         Uri.parse(widget.urlModel.url),
       );
+    _addressController = TextEditingController(text: widget.urlModel.address);
+    _priceController = TextEditingController(text: widget.urlModel.price);
+    _phoneController = TextEditingController(text: widget.urlModel.phoneNumber);
+    _emailController = TextEditingController(text: widget.urlModel.email);
     _nameController = TextEditingController(text: widget.urlModel.name);
-    _urlController = TextEditingController(text: widget.urlModel.url);
-    _urlController.addListener(_onUrlChanged);
+    _priceController.addListener(_onUrlChanged);
   }
+
 //garbage test code
   Future<void> _fetchHtmlText() async {
     try {
@@ -63,6 +70,12 @@ class _EditUrlScreenState extends State<EditUrlScreen> {
       var addr = await getAddressFromLatLng(double.parse(la), double.parse(lo));
       print("IIIII+imagIIIIIIII " + addr);
       setState(() {
+        if (addr.isNotEmpty) {
+          _addressController.value = _addressController.value.copyWith(
+            text: addr,
+            selection: TextSelection.collapsed(offset: addr.length),
+          );
+        }
         parseAddressSimple(htmlText);
       });
     } catch (error) {
@@ -72,8 +85,8 @@ class _EditUrlScreenState extends State<EditUrlScreen> {
 
   @override
   void dispose() {
-    _nameController.dispose();
-    _urlController.dispose();
+    _addressController.dispose();
+    _priceController.dispose();
     super.dispose();
   }
 
@@ -97,23 +110,37 @@ class _EditUrlScreenState extends State<EditUrlScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                TextFormField(
+                  controller: _addressController,
+                ),
+                SizedBox(height: 16.0),
+                Text('Price:'),
+                TextFormField(
+                  controller: _priceController,
+                ),
+                SizedBox(height: 16.0),
+                Text('Phone:'),
+                TextFormField(
+                  controller: _phoneController,
+                ),
+                SizedBox(height: 16.0),
+                Text('Email:'),
+                TextFormField(
+                  controller: _emailController,
+                ),
                 Text('Name:'),
                 TextFormField(
                   controller: _nameController,
                 ),
-                SizedBox(height: 16.0),
-                Text('URL:'),
-                TextFormField(
-                  controller: _urlController,
-                ),
+                Text('Address:'),
                 SizedBox(height: 16.0),
                 ElevatedButton(
                   onPressed: () {
                     UrlModel updatedUrlModel = UrlModel(
                       uid: widget.urlModel.uid,
                       email: widget.urlModel.email,
-                      name: _nameController.text.trim(),
-                      url: _urlController.text.trim(),
+                      name: _addressController.text.trim(),
+                      url: _priceController.text.trim(),
                       imageUrl: widget.urlModel.imageUrl,
                       address: '',
                       quality: 0,
@@ -122,6 +149,8 @@ class _EditUrlScreenState extends State<EditUrlScreen> {
                       size: 0,
                       note: '',
                       features: '',
+                      phoneNumber: '',
+                      price: '',
                     );
                     if (widget.urlController.saveChanges(updatedUrlModel)) {
                       Get.back();

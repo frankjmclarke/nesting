@@ -13,7 +13,7 @@ class OnboardingUI extends StatelessWidget {
     return IntroductionSlider(
       items: [
         IntroductionSliderItem(
-          logo: Image.asset('assets/images/clipart1381082.png'),
+          logo: Image.asset('assets/images/clipart1530666.png'),
           title: Text(
             "Store all your online shopping in one place",
             style: TextStyle(

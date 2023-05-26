@@ -105,6 +105,8 @@ class UrlController extends GetxController {
         size: 0,
         note: '',
         features: '',
+        phoneNumber: '',
+        price: '',
       );
       currentList.urls.add(newUrlModel);
       firestoreUrlList.value = currentList;
@@ -154,6 +156,8 @@ class UrlController extends GetxController {
     size: 0,
     note: '',
     features: '',
+    phoneNumber: '',
+    price: '',
   );
 
   Future<void> insertTestUrl() async {
