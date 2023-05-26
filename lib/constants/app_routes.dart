@@ -1,7 +1,7 @@
+import 'package:flutter_starter/ui/onboarding/onboarding.dart';
 import 'package:get/get.dart';
 import 'package:flutter_starter/ui/ui.dart';
 import 'package:flutter_starter/ui/auth/auth.dart';
-
 import '../ui/home_menu_ui.dart';
 
 class AppRoutes {
@@ -16,5 +16,6 @@ class AppRoutes {
     GetPage(name: '/settings', page: () => SettingsUI()),
     GetPage(name: '/reset-password', page: () => ResetPasswordUI()),
     GetPage(name: '/update-profile', page: () => UpdateProfileUI()),
+    GetPage(name: '/onboarding', page: () => OnboardingUI()),
   ];
 }
