@@ -1,309 +1,69 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:onboarding/onboarding.dart';
-import '../url_list_ui.dart';
+import 'package:introduction_slider/source/presentation/pages/introduction_slider.dart';
+import 'package:introduction_slider/source/presentation/widgets/buttons.dart';
+import 'package:introduction_slider/source/presentation/widgets/dot_indicator.dart';
+import 'package:introduction_slider/source/presentation/widgets/introduction_slider_item.dart';
+import '../home_ui.dart';
 
-class OnboardingUI extends StatefulWidget {
-  @override
-  _OnboardingUIState createState() => _OnboardingUIState();
-}
-
-class _OnboardingUIState extends State<OnboardingUI> {
-  late Material materialButton;
-  late int index;
-  late int indexPrev;
-  final onboardingPagesList = [
-    PageModel(
-      widget: DecoratedBox(
-        decoration: BoxDecoration(
-          color: background,
-          border: Border.all(
-            width: 0.0,
-            color: background,
-          ),
-        ),
-        child: SingleChildScrollView(
-          controller: ScrollController(),
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 45.0,
-                  vertical: 90.0,
-                ),
-                child: Image.asset('assets/images/facebook.png',
-                    color: pageImageColor),
-              ),
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 45.0),
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    'SECURED BACKUP',
-                    style: pageTitleStyle,
-                    textAlign: TextAlign.left,
-                  ),
-                ),
-              ),
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 45.0, vertical: 10.0),
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    'Keep your files in closed safe so you can\'t lose them. Consider TrueNAS.',
-                    style: pageInfoStyle,
-                    textAlign: TextAlign.left,
-                  ),
-                ),
-              ),
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 45.0, vertical: 10.0),
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    'Keep your files in closed safe so you can\'t lose them. Consider TrueNAS.',
-                    style: pageInfoStyle,
-                    textAlign: TextAlign.left,
-                  ),
-                ),
-              ),
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 45.0, vertical: 10.0),
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    'Keep your files in closed safe so you can\'t lose them. Consider TrueNAS.',
-                    style: pageInfoStyle,
-                    textAlign: TextAlign.left,
-                  ),
-                ),
-              ),
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 45.0, vertical: 10.0),
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    'Keep your files in closed safe so you can\'t lose them. Consider TrueNAS.',
-                    style: pageInfoStyle,
-                    textAlign: TextAlign.left,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    ),
-    PageModel(
-      widget: DecoratedBox(
-        decoration: BoxDecoration(
-          color: background,
-          border: Border.all(
-            width: 0.0,
-            color: background,
-          ),
-        ),
-        child: SingleChildScrollView(
-          controller: ScrollController(),
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 45.0,
-                  vertical: 90.0,
-                ),
-                child: Image.asset('assets/images/twitter.png',
-                    color: pageImageColor),
-              ),
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 45.0),
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    'CHANGE AND RISE',
-                    style: pageTitleStyle,
-                    textAlign: TextAlign.left,
-                  ),
-                ),
-              ),
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 45.0, vertical: 10.0),
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    'Give others access to any file or folders you choose',
-                    style: pageInfoStyle,
-                    textAlign: TextAlign.left,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    ),
-    PageModel(
-      widget: DecoratedBox(
-        decoration: BoxDecoration(
-          color: background,
-          border: Border.all(
-            width: 0.0,
-            color: background,
-          ),
-        ),
-        child: SingleChildScrollView(
-          controller: ScrollController(),
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 45.0,
-                  vertical: 90.0,
-                ),
-                child: Image.asset('assets/images/instagram.png',
-                    color: pageImageColor),
-              ),
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 45.0),
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    'EASY ACCESS',
-                    style: pageTitleStyle,
-                    textAlign: TextAlign.left,
-                  ),
-                ),
-              ),
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 45.0, vertical: 10.0),
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    'Reach your files anytime from any devices anywhere',
-                    style: pageInfoStyle,
-                    textAlign: TextAlign.left,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    ),
-  ];
-
-  @override
-  void initState() {
-    super.initState();
-    materialButton = _skipButton();
-    index = 0;
-    indexPrev = 0;
-  }
-
-  Material _skipButton({void Function(int)? setIndex}) {
-    return Material(
-      borderRadius: defaultSkipButtonBorderRadius,
-      color: defaultSkipButtonColor,
-      child: InkWell(
-        borderRadius: defaultSkipButtonBorderRadius,
-        onTap: () {
-          if (setIndex != null) {
-            index = 2;
-            setIndex(2);
-          }
-        },
-        child: const Padding(
-          padding: defaultSkipButtonPadding,
-          child: Text(
-            'Skip',
-            style: defaultSkipButtonTextStyle,
-          ),
-        ),
-      ),
-    );
-  }
-
-  Material get _signupButton {
-    return Material(
-      borderRadius: defaultProceedButtonBorderRadius,
-      color: defaultProceedButtonColor,
-      child: InkWell(
-        borderRadius: defaultProceedButtonBorderRadius,
-        onTap: () {
-          //https://medium.com/@iamrutudhvaj/getx-flutter-b3781be2b644
-          Get.to(UrlListUI());
-          //Get.back();
-          //Get.toNamed("/second");
-          //Get.toNamed("/fourth", arguments: "Hello World!");
-        },
-        child: const Padding(
-          padding: defaultProceedButtonPadding,
-          child: Text(
-            'Sign up',
-            style: defaultProceedButtonTextStyle,
-          ),
-        ),
-      ),
-    );
-  }
+class OnboardingUI extends StatelessWidget {
+  const OnboardingUI({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-      ),
-      home: Scaffold(
-        body: Onboarding(
-          pages: onboardingPagesList,
-          onPageChange: (int pageIndex) {
-            index = pageIndex;
-            if (index == 2 && indexPrev == 2) {
-              Get.to(UrlListUI()); //off the edge
-            }
-            indexPrev = index;
-          },
-          startPageIndex: 0,
-          footerBuilder: (context, dragDistance, pagesLength, setIndex) {
-            return DecoratedBox(
-              decoration: BoxDecoration(
-                color: background,
-                border: Border.all(
-                  width: 0.0,
-                  color: background,
-                ),
-              ),
-              child: ColoredBox(
-                color: background,
-                child: Padding(
-                  padding: const EdgeInsets.all(45.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      CustomIndicator(
-                          netDragPercent: dragDistance,
-                          pagesLength: pagesLength,
-                          indicator: Indicator(
-                            indicatorDesign: IndicatorDesign.polygon(
-                              polygonDesign: PolygonDesign(
-                                polygon: DesignType.polygon_circle,
-                              ),
-                            ),
-                          )),
-                      index == pagesLength - 1
-                          ? _signupButton
-                          : _skipButton(setIndex: setIndex)
-                    ],
-                  ),
-                ),
-              ),
-            );
-          },
+    return IntroductionSlider(
+      items: [
+        IntroductionSliderItem(
+          logo: Image.asset('assets/images/clipart1381082.png'),
+          title: Text(
+            "Store all your online shopping in one place",
+            style: TextStyle(
+                fontSize: 28,
+                // height: 2, //line height 200%, 1= 100%, were 0.9 = 90% of actual line height
+                color: Colors.black87,
+                //font color
+                //backgroundColor: Colors.black12, //background color
+                letterSpacing: 1,
+                //letter spacing
+                //decoration: TextDecoration.underline, //make underline
+                decorationStyle: TextDecorationStyle.double,
+                //double underline
+                decorationColor: Colors.brown,
+                //text decoration 'underline' color
+                //decorationThickness: 1.5, //decoration 'underline' thickness
+                fontStyle: FontStyle.normal),
+          ),
+          backgroundColor: Colors.black12,
         ),
+        IntroductionSliderItem(
+          logo: Image.asset('assets/images/clipart865414.png'),
+          title: Text(
+            "Organize the things you want",
+            style: TextStyle(
+              fontSize: 28,
+              color: Colors.black87,
+            ),
+          ),
+          backgroundColor: Colors.black12,
+        ),
+        IntroductionSliderItem(
+          logo: Image.asset('assets/images/clipart1531477.png'),
+          title: Text(
+            "Organize the things you want",
+            style: TextStyle(
+              fontSize: 28,
+              color: Colors.black87,
+            ),
+          ),
+          backgroundColor: Colors.black12,
+        ),
+      ],
+      done: Done(
+        child: Icon(Icons.done),
+        home: HomeUI(),
       ),
+      next: Next(child: Icon(Icons.arrow_forward)),
+      back: Back(child: Icon(Icons.arrow_back)),
+      dotIndicator: DotIndicator(),
     );
   }
 }
