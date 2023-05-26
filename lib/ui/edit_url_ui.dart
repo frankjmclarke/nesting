@@ -95,7 +95,6 @@ class _EditUrlScreenState extends State<EditUrlScreen> {
       //   controller.loadRequest(_urlController.text as Uri);
     });
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -105,60 +104,64 @@ class _EditUrlScreenState extends State<EditUrlScreen> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                TextFormField(
-                  controller: _addressController,
+          Expanded(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    TextFormField(
+                      controller: _addressController,
+                    ),
+                    SizedBox(height: 16.0),
+                    Text('Price:'),
+                    TextFormField(
+                      controller: _priceController,
+                    ),
+                    SizedBox(height: 16.0),
+                    Text('Phone:'),
+                    TextFormField(
+                      controller: _phoneController,
+                    ),
+                    SizedBox(height: 16.0),
+                    Text('Email:'),
+                    TextFormField(
+                      controller: _emailController,
+                    ),
+                    Text('Name:'),
+                    TextFormField(
+                      controller: _nameController,
+                    ),
+                    Text('Address:'),
+                    SizedBox(height: 16.0),
+                    ElevatedButton(
+                      onPressed: () {
+                        UrlModel updatedUrlModel = UrlModel(
+                          uid: widget.urlModel.uid,
+                          email: widget.urlModel.email,
+                          name: _addressController.text.trim(),
+                          url: _priceController.text.trim(),
+                          imageUrl: widget.urlModel.imageUrl,
+                          address: '',
+                          quality: 0,
+                          distance: 0,
+                          value: 0,
+                          size: 0,
+                          note: '',
+                          features: '',
+                          phoneNumber: '',
+                          price: '',
+                        );
+                        if (widget.urlController.saveChanges(updatedUrlModel)) {
+                          Get.back();
+                        }
+                      },
+                      child: Text('Save Changes'),
+                    ),
+                  ],
                 ),
-                SizedBox(height: 16.0),
-                Text('Price:'),
-                TextFormField(
-                  controller: _priceController,
-                ),
-                SizedBox(height: 16.0),
-                Text('Phone:'),
-                TextFormField(
-                  controller: _phoneController,
-                ),
-                SizedBox(height: 16.0),
-                Text('Email:'),
-                TextFormField(
-                  controller: _emailController,
-                ),
-                Text('Name:'),
-                TextFormField(
-                  controller: _nameController,
-                ),
-                Text('Address:'),
-                SizedBox(height: 16.0),
-                ElevatedButton(
-                  onPressed: () {
-                    UrlModel updatedUrlModel = UrlModel(
-                      uid: widget.urlModel.uid,
-                      email: widget.urlModel.email,
-                      name: _addressController.text.trim(),
-                      url: _priceController.text.trim(),
-                      imageUrl: widget.urlModel.imageUrl,
-                      address: '',
-                      quality: 0,
-                      distance: 0,
-                      value: 0,
-                      size: 0,
-                      note: '',
-                      features: '',
-                      phoneNumber: '',
-                      price: '',
-                    );
-                    if (widget.urlController.saveChanges(updatedUrlModel)) {
-                      Get.back();
-                    }
-                  },
-                  child: Text('Save Changes'),
-                ),
-              ],
+              ),
             ),
           ),
           Expanded(
