@@ -41,6 +41,10 @@ class UrlListUI extends StatelessWidget {
   }
 
   Widget _buildUrlItem(UrlModel urlModel) {
+    String imageUrl = urlModel.imageUrl.isNotEmpty
+        ? urlModel.imageUrl
+        : 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/03/Feral_pigeon_%28Columba_livia_domestica%29%2C_2017-05-27.jpg/1024px-Feral_pigeon_%28Columba_livia_domestica%29%2C_2017-05-27.jpg';
+
     return Dismissible(
       key: Key(urlModel.uid),
       background: Container(
@@ -79,40 +83,40 @@ class UrlListUI extends StatelessWidget {
       child: Card(
         child: Row(
           children: [
-          SizedBox(
-          height: 56,
-          width: 56.0, // Set the width equal to the height of the card
-          child: ClipRRect(
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(4.0), // Adjust the border radius as needed
-              bottomLeft: Radius.circular(4.0), // Adjust the border radius as needed
+            SizedBox(
+              height: 56,
+              width: 56.0, // Set the width equal to the height of the card
+              child: ClipRRect(
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(4.0), // Adjust the border radius as needed
+                  bottomLeft: Radius.circular(4.0), // Adjust the border radius as needed
+                ),
+                child: Image.network(
+                  imageUrl,
+                  fit: BoxFit.cover, // Crop and center the image
+                ),
+              ),
             ),
-            child: Image.network(
-              urlModel.imageUrl, // Replace with your image URL
-              fit: BoxFit.cover, // Crop and center the image
+            Expanded(
+              child: ListTile(
+                title: Text(
+                  urlModel.url,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                subtitle: Text(
+                  urlModel.name,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                trailing: IconButton(
+                  icon: Icon(Icons.edit),
+                  onPressed: () {
+                    _editUrlModel(urlModel);
+                  },
+                ),
+              ),
             ),
-          ),
-        ),
-    Expanded(
-        child: ListTile(
-          title: Text(
-            urlModel.url,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-          ),
-          subtitle: Text(
-            urlModel.name,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-          ),
-          trailing: IconButton(
-            icon: Icon(Icons.edit),
-            onPressed: () {
-              _editUrlModel(urlModel);
-            },
-          ),
-        ),
-    ),
           ],
         ),
       ),

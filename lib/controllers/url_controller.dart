@@ -33,9 +33,9 @@ class UrlController extends GetxController {
     fetchUrlList();
     _textStreamSubscription =
         ReceiveSharingIntent.getTextStream().listen((String text) {
-          _sharedText = text;
-          _addTextToListIfUnique();
-        });
+      _sharedText = text;
+      _addTextToListIfUnique();
+    });
     ReceiveSharingIntent.getInitialText().then((String? text) {
       if (text != null) {
         _sharedText = text;
@@ -58,9 +58,8 @@ class UrlController extends GetxController {
     super.onClose();
   }
 
-  Stream<UrlModelList> get urlList =>
-      firestoreUrlList.map(
-            (urlList) => UrlModelList(urls: urlList?.urls ?? []),
+  Stream<UrlModelList> get urlList => firestoreUrlList.map(
+        (urlList) => UrlModelList(urls: urlList?.urls ?? []),
       );
 
   bool containsText(String text) {
@@ -73,17 +72,15 @@ class UrlController extends GetxController {
 
   Future<String> _fetchHtmlText(String url) async {
     try {
-      final response =
-      await HttpClient().getUrl(Uri.parse(url));
+      final response = await HttpClient().getUrl(Uri.parse(url));
       final responseBody = await response.close();
       final htmlBytes = await responseBody.toList();
       final htmlText =
-      String.fromCharCodes(htmlBytes.expand((byteList) => byteList));
+          String.fromCharCodes(htmlBytes.expand((byteList) => byteList));
       final imageUrl =
-      await getImageUrl(htmlText); // Await the getImageUrl function call
+          await getImageUrl(htmlText); // Await the getImageUrl function call
       print("IIIIIIIIIIIII $imageUrl");
       return imageUrl;
-
     } catch (error) {
       print('Error fetching HTML: $error');
     }
@@ -93,7 +90,7 @@ class UrlController extends GetxController {
   Future<void> _addTextToListIfUnique() async {
     if (!containsText(_sharedText)) {
       String imageUrl = await _fetchHtmlText(_sharedText);
-      print ("AAAAAA imageUrl "+ imageUrl);
+      print("AAAAAA imageUrl " + imageUrl);
       final currentList = firestoreUrlList.value ?? UrlModelList(urls: []);
       final newUrlModel = UrlModel(
         uid: StringUtil.generateRandomId(15),
@@ -101,6 +98,13 @@ class UrlController extends GetxController {
         name: '',
         url: _sharedText,
         imageUrl: imageUrl,
+        address: '',
+        quality: 0,
+        distance: 0,
+        value: 0,
+        size: 0,
+        note: '',
+        features: '',
       );
       currentList.urls.add(newUrlModel);
       firestoreUrlList.value = currentList;
@@ -111,13 +115,13 @@ class UrlController extends GetxController {
   Future<void> fetchUrlList() async {
     try {
       final snapshot = await _db.collection('urls').get();
-      final urls = snapshot.docs.map((doc) => UrlModel.fromMap(doc.data()))
-          .toList();
+      final urls =
+          snapshot.docs.map((doc) => UrlModel.fromMap(doc.data())).toList();
       firestoreUrlList.value = UrlModelList(urls: urls);
 
       _db.collection('urls').snapshots().listen((snapshot) {
-        final urls = snapshot.docs.map((doc) => UrlModel.fromMap(doc.data()))
-            .toList();
+        final urls =
+            snapshot.docs.map((doc) => UrlModel.fromMap(doc.data())).toList();
         firestoreUrlList.value = UrlModelList(urls: urls);
         print("Firestore collection updated");
       });
@@ -141,7 +145,15 @@ class UrlController extends GetxController {
     email: 'testy@testy.com',
     name: 'Testing URL',
     url: 'https://google.com',
-    imageUrl: 'https://images.ctfassets.net/m8onsx4mm13s/6JEns3QGHSdqgaQ8i1EyF6/fa052ce2406881e26c0162cf04980ef5/__static.gibson.com_product-images_Epiphone_EPIKNE179_TV_Yellow_EILPTVNH1_front.jpg?h=900',
+    imageUrl:
+        'https://images.ctfassets.net/m8onsx4mm13s/6JEns3QGHSdqgaQ8i1EyF6/fa052ce2406881e26c0162cf04980ef5/__static.gibson.com_product-images_Epiphone_EPIKNE179_TV_Yellow_EILPTVNH1_front.jpg?h=900',
+    address: '',
+    quality: 0,
+    distance: 0,
+    value: 0,
+    size: 0,
+    note: '',
+    features: '',
   );
 
   Future<void> insertTestUrl() async {
@@ -171,6 +183,7 @@ class UrlController extends GetxController {
       print('Error deleting UrlModel: $error');
     }
   }
+
   Future<void> updateUrl(UrlModel updatedUrl) async {
     try {
       // Convert the updated UrlModel to a JSON map
@@ -184,8 +197,10 @@ class UrlController extends GetxController {
       print('Error updating URL: $error');
     }
   }
+
   void updateUrl2(UrlModel updatedUrlModel) async {
-    final index = firestoreUrlList.value!.urls.indexWhere((url) => url.uid == updatedUrlModel.uid);
+    final index = firestoreUrlList.value!.urls
+        .indexWhere((url) => url.uid == updatedUrlModel.uid);
 
     if (index != -1) {
       firestoreUrlList.value!.urls[index] = updatedUrlModel;
@@ -208,6 +223,7 @@ class UrlController extends GetxController {
       }
     }
   }
+
   bool saveChanges(UrlModel updatedUrlModel) {
     if (updatedUrlModel.name.isEmpty || updatedUrlModel.url.isEmpty) {
       // Display an error message or show a snackbar indicating missing fields

@@ -1,4 +1,3 @@
-//User Model
 class UrlModel {
   final String uid;
   final String email;
@@ -6,18 +5,44 @@ class UrlModel {
   final String url;
   late final String imageUrl;
 
-  UrlModel(
-      {required this.uid,
-      required this.email,
-      required this.name,
-        required this.url  ,    required this.imageUrl});
+  // New fields
+  final String address;
+  final int quality;
+  final int distance;
+  final int value;
+  final int size;
+  final String note;
+  final String features;
+
+  UrlModel({
+    required this.uid,
+    required this.email,
+    required this.name,
+    required this.url,
+    required this.imageUrl,
+    required this.address,
+    required this.quality,
+    required this.distance,
+    required this.value,
+    required this.size,
+    required this.note,
+    required this.features,
+  });
 
   Map<String, dynamic> toMap() {
     return {
       'uid': uid,
       'email': email,
       'name': name,
-      'url': url,      'imageUrl': imageUrl,
+      'url': url,
+      'imageUrl': imageUrl,
+      'address': address,
+      'quality': quality,
+      'distance': distance,
+      'value': value,
+      'size': size,
+      'note': note,
+      'features': features,
     };
   }
 
@@ -28,22 +53,43 @@ class UrlModel {
       name: data['name'] ?? '',
       url: data['url'] ?? '',
       imageUrl: data['imageUrl'] ?? '',
+      address: data['address'] ?? '',
+      quality: data['quality'] ?? 0,
+      distance: data['distance'] ?? 0,
+      value: data['value'] ?? 0,
+      size: data['size'] ?? 0,
+      note: data['note'] ?? '',
+      features: data['features'] ?? '',
     );
-
   }
 
   @override
   String getUrl() {
     return url; // Customize the string representation as per your requirements
   }
+
   String getImageUrl() {
     return imageUrl; // Customize the string representation as per your requirements
   }
+
   String getEmail() {
     return email; // Customize the string representation as per your requirements
   }
-  Map<String, dynamic> toJson() =>
-      {"uid": uid, "email": email, "name": name, "url": url, "imageUrl": imageUrl};
+
+  Map<String, dynamic> toJson() => {
+        "uid": uid,
+        "email": email,
+        "name": name,
+        "url": url,
+        "imageUrl": imageUrl,
+        "address": address,
+        "quality": quality,
+        "distance": distance,
+        "value": value,
+        "size": size,
+        "note": note,
+        "features": features,
+      };
 }
 
 class UrlModelList {
@@ -52,9 +98,8 @@ class UrlModelList {
   UrlModelList({required this.urls});
 
   factory UrlModelList.fromList(List<Map> dataList) {
-    List<UrlModel> urlModels = dataList
-        .map((data) => UrlModel.fromMap(data))
-        .toList(growable: false);
+    List<UrlModel> urlModels =
+        dataList.map((data) => UrlModel.fromMap(data)).toList(growable: false);
     return UrlModelList(urls: urlModels);
   }
 
@@ -68,10 +113,10 @@ class UrlModelList {
   }
 
   bool get isNotEmpty => urls.isNotEmpty;
+
   UrlModel? get first => urls.isNotEmpty ? urls[0] : null;
 
   void add(UrlModel urlModel) {
     urls.add(urlModel);
   }
 }
-
