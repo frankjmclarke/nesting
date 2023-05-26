@@ -1,11 +1,9 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import '../controllers/url_controller.dart';
 import '../helpers/canada_address.dart';
-import '../helpers/image.dart';
 import '../helpers/maps.dart';
 import '../models/url_model.dart';
 
@@ -23,7 +21,6 @@ class _EditUrlScreenState extends State<EditUrlScreen> {
   late final WebViewController controller;
   late TextEditingController _nameController;
   late TextEditingController _urlController;
-  late WebViewController _webViewController;
 
   @override
   void initState() {

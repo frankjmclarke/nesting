@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -41,8 +43,8 @@ class ThemeController extends GetxController {
   // checks whether darkmode is set via system or previously by user
   bool get isDarkModeOn {
     if (currentTheme == 'system') {
-      if (WidgetsBinding.instance!.window.platformBrightness ==
-          Brightness.dark) {
+      final mode = PlatformDispatcher.instance.platformBrightness;
+      if (mode == Brightness.dark) {
         return true;
       }
     }

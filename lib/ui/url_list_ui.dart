@@ -84,8 +84,8 @@ class UrlListUI extends StatelessWidget {
         child: Row(
           children: [
             SizedBox(
-              height: 56,
-              width: 56.0, // Set the width equal to the height of the card
+              height: 96,
+              width: 96.0, // Set the width equal to the height of the card
               child: ClipRRect(
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(4.0), // Adjust the border radius as needed

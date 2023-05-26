@@ -1,9 +1,6 @@
 import 'package:html/parser.dart' as parser;
 import 'package:http/http.dart' as http;
 
-final String htmlString =
-    '<html><body><img src="https://example.com/image.jpg"></body></html>';
-
 String extractImageUrl(String html) {
   final document = parser.parse(html);
   final imageElement = document.getElementsByTagName('img').first;
@@ -26,7 +23,6 @@ Future<String> getImageUrl(String html) async {
       print("imageSizeInBytes " + imageSizeInBytes.toString());
       if (imageSizeInBytes != null && imageSizeInBytes > 3040) {
         return imageUrl;
-        break;
       }
     }
   }

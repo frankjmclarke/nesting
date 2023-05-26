@@ -11,6 +11,7 @@ class HomeUI extends StatefulWidget {
 
 class _HomeUIState extends State<HomeUI> {
   int _currentIndex = 0;
+  bool isLoading = true;
 
   final List<Widget> _screens = [
     HomeMenuUI(),
@@ -19,11 +20,29 @@ class _HomeUIState extends State<HomeUI> {
   ];
 
   @override
+  void initState() {
+    super.initState();
+    // Start the timeout mechanism
+    startTimeout();
+  }
+
+  void startTimeout() {
+    // Wait for 5 seconds, then set isLoading to false
+    Future.delayed(Duration(seconds: 5), () {
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return GetBuilder<AuthController>(
       init: AuthController(),
       builder: (controller) {
-        if (controller.firestoreUser.value!.uid == null) {
+        if (isLoading || controller.firestoreUser.value?.uid == null) {
           return Center(
             child: CircularProgressIndicator(),
           );

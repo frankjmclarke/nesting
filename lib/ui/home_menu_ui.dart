@@ -10,7 +10,7 @@ class HomeMenuUI extends StatelessWidget {
     return GetBuilder<AuthController>(
       init: AuthController(),
       builder: (controller) {
-        if (controller.firestoreUser.value!.uid == null) {
+        if (controller.firestoreUser.value == null || controller.firestoreUser.value!.uid == null) {
           return Center(
             child: CircularProgressIndicator(),
           );
