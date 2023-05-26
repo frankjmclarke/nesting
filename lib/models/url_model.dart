@@ -4,19 +4,20 @@ class UrlModel {
   final String email;
   final String name;
   final String url;
+  late final String imageUrl;
 
   UrlModel(
       {required this.uid,
       required this.email,
       required this.name,
-      required this.url});
+        required this.url  ,    required this.imageUrl});
 
   Map<String, dynamic> toMap() {
     return {
       'uid': uid,
       'email': email,
       'name': name,
-      'url': url,
+      'url': url,      'imageUrl': imageUrl,
     };
   }
 
@@ -26,6 +27,7 @@ class UrlModel {
       email: data['email'] ?? '',
       name: data['name'] ?? '',
       url: data['url'] ?? '',
+      imageUrl: data['imageUrl'] ?? '',
     );
 
   }
@@ -34,11 +36,14 @@ class UrlModel {
   String getUrl() {
     return url; // Customize the string representation as per your requirements
   }
+  String getImageUrl() {
+    return imageUrl; // Customize the string representation as per your requirements
+  }
   String getEmail() {
     return email; // Customize the string representation as per your requirements
   }
   Map<String, dynamic> toJson() =>
-      {"uid": uid, "email": email, "name": name, "url": url};
+      {"uid": uid, "email": email, "name": name, "url": url, "imageUrl": imageUrl};
 }
 
 class UrlModelList {

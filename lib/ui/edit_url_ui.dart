@@ -64,6 +64,7 @@ class _EditUrlScreenState extends State<EditUrlScreen> {
       final imageUrl =
           await getImageUrl(htmlText); // Await the getImageUrl function call
       print("IIIIIIIIIIIII $imageUrl");
+      widget.urlModel.imageUrl =imageUrl;
       var lo = findLongitude(htmlText);
       var la = findLatitude(htmlText);
       print('SSSS ' + la + " LONG " + lo);
@@ -121,6 +122,7 @@ class _EditUrlScreenState extends State<EditUrlScreen> {
                       email: widget.urlModel.email,
                       name: _nameController.text.trim(),
                       url: _urlController.text.trim(),
+                      imageUrl: widget.urlModel.imageUrl,
                     );
                     if (widget.urlController.saveChanges(updatedUrlModel)) {
                       Get.back();

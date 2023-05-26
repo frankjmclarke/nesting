@@ -1,9 +1,12 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:receive_sharing_intent/receive_sharing_intent.dart';
+import '../helpers/image.dart';
 import '../helpers/string_util.dart';
 import '../models/url_model.dart';
 
@@ -68,14 +71,36 @@ class UrlController extends GetxController {
     return false;
   }
 
-  void _addTextToListIfUnique() {
+  Future<String> _fetchHtmlText(String url) async {
+    try {
+      final response =
+      await HttpClient().getUrl(Uri.parse(url));
+      final responseBody = await response.close();
+      final htmlBytes = await responseBody.toList();
+      final htmlText =
+      String.fromCharCodes(htmlBytes.expand((byteList) => byteList));
+      final imageUrl =
+      await getImageUrl(htmlText); // Await the getImageUrl function call
+      print("IIIIIIIIIIIII $imageUrl");
+      return imageUrl;
+
+    } catch (error) {
+      print('Error fetching HTML: $error');
+    }
+    return '';
+  }
+
+  Future<void> _addTextToListIfUnique() async {
     if (!containsText(_sharedText)) {
+      String imageUrl = await _fetchHtmlText(_sharedText);
+      print ("AAAAAA imageUrl "+ imageUrl);
       final currentList = firestoreUrlList.value ?? UrlModelList(urls: []);
       final newUrlModel = UrlModel(
         uid: StringUtil.generateRandomId(15),
         email: '',
         name: '',
         url: _sharedText,
+        imageUrl: imageUrl,
       );
       currentList.urls.add(newUrlModel);
       firestoreUrlList.value = currentList;
@@ -116,6 +141,7 @@ class UrlController extends GetxController {
     email: 'testy@testy.com',
     name: 'Testing URL',
     url: 'https://google.com',
+    imageUrl: 'https://images.ctfassets.net/m8onsx4mm13s/6JEns3QGHSdqgaQ8i1EyF6/fa052ce2406881e26c0162cf04980ef5/__static.gibson.com_product-images_Epiphone_EPIKNE179_TV_Yellow_EILPTVNH1_front.jpg?h=900',
   );
 
   Future<void> insertTestUrl() async {
