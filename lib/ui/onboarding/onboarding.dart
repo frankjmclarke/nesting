@@ -46,7 +46,7 @@ class OnboardingUI extends StatelessWidget {
           backgroundColor: Colors.black12,
         ),
         IntroductionSliderItem(
-          logo: Image.asset('assets/images/clipart1531477.png'),
+          logo: Image.asset('assets/images/shop.png'),
           title: Text(
             "Organize the things you want",
             style: TextStyle(

@@ -28,24 +28,35 @@ class _EditUrlScreenState extends State<EditUrlScreen> {
   @override
   void initState() {
     super.initState();
-    controller = WebViewController()
-      ..setJavaScriptMode(JavaScriptMode.unrestricted)
-      ..setNavigationDelegate(NavigationDelegate(
-        onPageStarted: (url) {
-          setState(() {
-            // loadingPercentage = 0;
-          });
-        },
-        onPageFinished: (url) {
-          setState(() {
-            //  loadingPercentage = 100;
-          });
-          _fetchHtmlText();
-        },
-      ))
-      ..loadRequest(
-        Uri.parse(widget.urlModel.url),
-      );
+    try {
+      controller = WebViewController()
+        ..setJavaScriptMode(JavaScriptMode.unrestricted)
+        ..setNavigationDelegate(NavigationDelegate(
+          onPageStarted: (url) {
+            setState(() {
+              // loadingPercentage = 0;
+            });
+          },
+          onPageFinished: (url) {
+            setState(() {
+              //  loadingPercentage = 100;
+            });
+            _fetchHtmlText();
+          },
+        ));
+
+      // Load the URL
+      final uri = Uri.parse(widget.urlModel.url);
+      if (uri.scheme != null && uri.host != null) {
+        controller.loadRequest(uri);
+        print("!!!!!!!!!!!!!" +widget.urlModel.url);
+      } else {
+        throw Exception('Invalid URL');
+      }
+    } catch (e) {
+      print('Error loading URL: $e');
+      // Handle the error (e.g., show an error message)
+    }
     _addressController = TextEditingController(text: widget.urlModel.address);
     _priceController = TextEditingController(text: widget.urlModel.price);
     _phoneController = TextEditingController(text: widget.urlModel.phoneNumber);
@@ -54,16 +65,16 @@ class _EditUrlScreenState extends State<EditUrlScreen> {
     _priceController.addListener(_onUrlChanged);
   }
 
-//garbage test code
+  //garbage test code
   Future<void> _fetchHtmlText() async {
     try {
       final response =
-          await HttpClient().getUrl(Uri.parse(widget.urlModel.url));
+      await HttpClient().getUrl(Uri.parse(widget.urlModel.url));
       final responseBody = await response.close();
       final htmlBytes = await responseBody.toList();
 
       final htmlText =
-          String.fromCharCodes(htmlBytes.expand((byteList) => byteList));
+      String.fromCharCodes(htmlBytes.expand((byteList) => byteList));
       var lo = findLongitude(htmlText);
       var la = findLatitude(htmlText);
       print('SSSS ' + la + " LONG " + lo);
@@ -95,6 +106,87 @@ class _EditUrlScreenState extends State<EditUrlScreen> {
       //   controller.loadRequest(_urlController.text as Uri);
     });
   }
+  List<String> canceledFields = [];
+
+  Future<void> _saveChanges() async {
+    // Validate if all fields have values
+    if (_addressController.text.isEmpty ||
+        _priceController.text.isEmpty ||
+        _phoneController.text.isEmpty ||
+        _emailController.text.isEmpty ||
+        _nameController.text.isEmpty) {
+      // Show dialog to input values for empty fields
+      if (_addressController.text.isEmpty && !canceledFields.contains('Address')) {
+        await _showInputDialog(context, 'Address', _addressController);
+      } else if (_priceController.text.isEmpty && !canceledFields.contains('Price')) {
+        await _showInputDialog(context, 'Price', _priceController);
+      } else if (_phoneController.text.isEmpty && !canceledFields.contains('Phone')) {
+        await _showInputDialog(context, 'Phone', _phoneController);
+      } else if (_emailController.text.isEmpty && !canceledFields.contains('Email')) {
+        await _showInputDialog(context, 'Email', _emailController);
+      } else if (_nameController.text.isEmpty && !canceledFields.contains('Name')) {
+        await _showInputDialog(context, 'Name', _nameController);
+      }
+      return;
+    }
+
+    // All fields have values, save changes
+    UrlModel updatedUrlModel = UrlModel(
+      uid: widget.urlModel.uid,
+      email: widget.urlModel.email,
+      name: _addressController.text.trim(),
+      url: widget.urlModel.url,
+      imageUrl: widget.urlModel.imageUrl,
+      address: '',
+      quality: 0,
+      distance: 0,
+      value: 0,
+      size: 0,
+      note: '',
+      features: '',
+      phoneNumber: '',
+      price: '',
+    );
+    if (widget.urlController.saveChanges(updatedUrlModel)) {
+      Get.back();
+    }
+  }
+
+  Future<void> _showInputDialog(BuildContext context, String fieldName, TextEditingController controller) async {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Enter $fieldName'),
+          content: TextFormField(
+            controller: controller,
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                canceledFields.add(fieldName);
+                Navigator.of(context).pop();
+              },
+              child: Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                if (controller.text.isNotEmpty) {
+                  _saveChanges();
+                  Get.back();
+                } else {
+                  _showInputDialog(context, fieldName, controller);
+                }
+              },
+              child: Text('Save'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -111,10 +203,6 @@ class _EditUrlScreenState extends State<EditUrlScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    TextFormField(
-                      controller: _addressController,
-                    ),
-                    SizedBox(height: 16.0),
                     Text('Price:'),
                     TextFormField(
                       controller: _priceController,
@@ -134,29 +222,12 @@ class _EditUrlScreenState extends State<EditUrlScreen> {
                       controller: _nameController,
                     ),
                     Text('Address:'),
+                    TextFormField(
+                      controller: _addressController,
+                    ),
                     SizedBox(height: 16.0),
                     ElevatedButton(
-                      onPressed: () {
-                        UrlModel updatedUrlModel = UrlModel(
-                          uid: widget.urlModel.uid,
-                          email: widget.urlModel.email,
-                          name: _addressController.text.trim(),
-                          url: _priceController.text.trim(),
-                          imageUrl: widget.urlModel.imageUrl,
-                          address: '',
-                          quality: 0,
-                          distance: 0,
-                          value: 0,
-                          size: 0,
-                          note: '',
-                          features: '',
-                          phoneNumber: '',
-                          price: '',
-                        );
-                        if (widget.urlController.saveChanges(updatedUrlModel)) {
-                          Get.back();
-                        }
-                      },
+                      onPressed: _saveChanges,
                       child: Text('Save Changes'),
                     ),
                   ],
