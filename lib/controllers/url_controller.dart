@@ -17,9 +17,9 @@ class UrlController extends GetxController {
   final Rxn<UrlModel> firebaseUrl = Rxn<UrlModel>();
   final Rxn<UrlModelList> firestoreUrlList = Rxn<UrlModelList>();
 
-  final TextEditingController nameController = TextEditingController();
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
+  //final TextEditingController nameController = TextEditingController();
+  //final TextEditingController emailController = TextEditingController();
+  //final TextEditingController passwordController = TextEditingController();
 
   final RxBool admin = false.obs;
   StreamSubscription<String>? _textStreamSubscription;
@@ -52,9 +52,9 @@ class UrlController extends GetxController {
 
   @override
   void onClose() {
-    nameController.dispose();
-    emailController.dispose();
-    passwordController.dispose();
+    //nameController.dispose();
+    //emailController.dispose();
+    //passwordController.dispose();
     super.onClose();
   }
 
@@ -114,6 +114,29 @@ class UrlController extends GetxController {
     }
   }
 
+  Future<void> fetchUrlListByCategory(String category) async {
+    try {
+      final snapshot = await _db
+          .collection('urls')
+          .where('category', isEqualTo: category)
+          .get();
+      final urls =
+      snapshot.docs.map((doc) => UrlModel.fromMap(doc.data())).toList();
+      firestoreUrlList.value = UrlModelList(urls: urls);
+
+      _db.collection('urls').snapshots().listen((snapshot) {
+        final urls =
+        snapshot.docs.map((doc) => UrlModel.fromMap(doc.data())).toList();
+        firestoreUrlList.value = UrlModelList(urls: urls);
+        print("Firestore collection updated");
+      });
+
+      print("fetchUrlListByCategory SUCCESS ");
+    } catch (error) {
+      print("Error fetching url list by category: $error");
+    }
+  }
+
   Future<void> fetchUrlList() async {
     try {
       final snapshot = await _db.collection('urls').get();
@@ -135,9 +158,9 @@ class UrlController extends GetxController {
   }
 
   Future<void> signOut() async {
-    nameController.clear();
-    emailController.clear();
-    passwordController.clear();
+    //nameController.clear();
+    //emailController.clear();
+    //passwordController.clear();
     await _auth.signOut();
   }
 
