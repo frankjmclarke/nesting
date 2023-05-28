@@ -99,7 +99,7 @@ class CategoryListUI extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                 ),
                 subtitle: Text(
-                  catModel.icon.toString(),
+                  catModel.numItems.toString(),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),/*

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_starter/controllers/category_controller.dart';
 import 'package:get/get.dart';
 import '../controllers/url_controller.dart';
 import '../models/url_model.dart';
@@ -6,6 +7,8 @@ import 'edit_url_ui.dart';
 
 class UrlListUI extends StatelessWidget {
   final UrlController urlController = Get.put(UrlController());
+  final CategoryController myController = Get.put(CategoryController());
+   int urlsOnLoad=0;
 
   @override
   Widget build(BuildContext context) {
@@ -21,6 +24,8 @@ class UrlListUI extends StatelessWidget {
             );
           } else {
             final List<UrlModel> urls = urlController.firestoreUrlList.value!.urls;
+            urlsOnLoad=urls.length;
+            _updateCategoryTotal();
             if (urls.isEmpty) {
               return Center(
                 child: Text('No data available'),
@@ -69,7 +74,10 @@ class UrlListUI extends StatelessWidget {
                   child: Text('Cancel'),
                 ),
                 TextButton(
-                  onPressed: () => Navigator.of(context).pop(true),
+                  onPressed: () {
+                    Navigator.of(context).pop(true);
+                    _updateCategoryTotal(); // Call myMethod()
+                  },
                   child: Text('Delete'),
                 ),
               ],
@@ -122,7 +130,9 @@ class UrlListUI extends StatelessWidget {
       ),
     );
   }
-
+  void _updateCategoryTotal() {
+      myController.updateNumItems('07hVeZyY2PM7VK8DC5QX',urlsOnLoad);
+  }
   void _editUrlModel(UrlModel urlModel) {
     Get.to(EditUrlScreen(urlModel: urlModel, urlController: urlController));
   }
