@@ -55,6 +55,7 @@ class CategoryController extends GetxController {
         icon: 1,
         color:1,
         flag:1,
+        imageUrl: 'https://cdn.onlinewebfonts.com/svg/img_259453.png',
       );
       currentList.categories.add(newCategoryModel);
       firestoreCategoryList.value = currentList;
@@ -124,6 +125,7 @@ class CategoryController extends GetxController {
     icon: 1,
     color:1,
     flag:1,
+    imageUrl: 'https://cdn.onlinewebfonts.com/svg/img_259453.png',
   );
 
   Future<void> insertTestCategory() async {

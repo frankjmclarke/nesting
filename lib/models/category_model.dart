@@ -1,10 +1,11 @@
 class CategoryModel {
   final String uid;
   final String title;
-  final String parent;//linked list
+  final String parent; //linked list
   final int icon;
   final int color;
   final int flag;
+  final String imageUrl; // Added imageUrl field
 
   CategoryModel({
     required this.uid,
@@ -13,6 +14,7 @@ class CategoryModel {
     required this.icon,
     required this.color,
     required this.flag,
+    required this.imageUrl, // Added imageUrl parameter
   });
 
   Map<String, dynamic> toMap() {
@@ -23,6 +25,7 @@ class CategoryModel {
       'icon': icon,
       'color': color,
       'flag': flag,
+      'imageUrl': imageUrl, // Added imageUrl key-value pair
     };
   }
 
@@ -34,6 +37,7 @@ class CategoryModel {
       icon: data['icon'] ?? '',
       color: data['color'] ?? '',
       flag: data['flag'] ?? '',
+      imageUrl: data['imageUrl'] ?? '', // Added imageUrl assignment
     );
   }
 
@@ -53,6 +57,7 @@ class CategoryModel {
     "icon": icon,
     "color": color,
     "flag": flag,
+    "imageUrl": imageUrl, // Added imageUrl key-value pair
   };
 }
 
@@ -62,8 +67,9 @@ class CategoryModelList {
   CategoryModelList({required this.categories});
 
   factory CategoryModelList.fromList(List<Map> dataList) {
-    List<CategoryModel> urlModels =
-    dataList.map((data) => CategoryModel.fromMap(data)).toList(growable: false);
+    List<CategoryModel> urlModels = dataList
+        .map((data) => CategoryModel.fromMap(data))
+        .toList(growable: false);
     return CategoryModelList(categories: urlModels);
   }
 

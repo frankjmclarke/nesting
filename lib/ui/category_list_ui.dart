@@ -19,17 +19,17 @@ class CategoryListUI extends StatelessWidget {
               child: CircularProgressIndicator(),
             );
           } else {
-            final List<CategoryModel> urls = categoryController.firestoreCategoryList.value!.urls;
-            if (urls.isEmpty) {
+            final List<CategoryModel> cats = categoryController.firestoreCategoryList.value!.categories;
+            if (cats.isEmpty) {
               return Center(
                 child: Text('No data available'),
               );
             } else {
               return ListView.builder(
-                itemCount: urls.length,
+                itemCount: cats.length,
                 itemBuilder: (context, index) {
-                  final urlModel = urls[index];
-                  return _buildCategoryItem(urlModel);
+                  final catModel = cats[index];
+                  return _buildCategoryItem(catModel);
                 },
               );
             }
@@ -39,10 +39,13 @@ class CategoryListUI extends StatelessWidget {
     );
   }
 
-  Widget _buildCategoryItem(CategoryModel urlModel) {
+  Widget _buildCategoryItem(CategoryModel catModel) {
+    String imageUrl = catModel.imageUrl.isNotEmpty
+        ? catModel.imageUrl
+        : 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/03/Feral_pigeon_%28Columba_livia_domestica%29%2C_2017-05-27.jpg/1024px-Feral_pigeon_%28Columba_livia_domestica%29%2C_2017-05-27.jpg';
 
     return Dismissible(
-      key: Key(urlModel.uid),
+      key: Key(catModel.uid),
       background: Container(
         color: Colors.red,
         alignment: Alignment.centerRight,
@@ -74,7 +77,7 @@ class CategoryListUI extends StatelessWidget {
         );
       },
       onDismissed: (direction) {
-        categoryController.deleteCategory(urlModel);
+        categoryController.deleteCategory(catModel);
       },
       child: Card(
         child: Row(
@@ -88,7 +91,7 @@ class CategoryListUI extends StatelessWidget {
                   bottomLeft: Radius.circular(4.0), // Adjust the border radius as needed
                 ),
                 child: Image.network(
-                  imageCategory,
+                  imageUrl,
                   fit: BoxFit.cover, // Crop and center the image
                 ),
               ),
@@ -96,19 +99,19 @@ class CategoryListUI extends StatelessWidget {
             Expanded(
               child: ListTile(
                 title: Text(
-                  urlModel.url,
+                  catModel.title,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
                 subtitle: Text(
-                  urlModel.name,
+                  catModel.icon.toString(),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
                 trailing: IconButton(
                   icon: Icon(Icons.edit),
                   onPressed: () {
-                    _editCategoryModel(urlModel);
+                    _editCategoryModel(catModel);
                   },
                 ),
               ),
@@ -119,7 +122,7 @@ class CategoryListUI extends StatelessWidget {
     );
   }
 
-  void _editCategoryModel(CategoryModel urlModel) {
- //   Get.to(EditCategoryScreen(urlModel: urlModel, categoryController: categoryController));
+  void _editCategoryModel(CategoryModel catModel) {
+ //   Get.to(EditCategoryScreen(catModel: catModel, categoryController: categoryController));
   }
 }
