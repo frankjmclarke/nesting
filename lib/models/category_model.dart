@@ -57,30 +57,30 @@ class CategoryModel {
 }
 
 class CategoryModelList {
-  final List<CategoryModel> urls;
+  final List<CategoryModel> categories;
 
-  CategoryModelList({required this.urls});
+  CategoryModelList({required this.categories});
 
   factory CategoryModelList.fromList(List<Map> dataList) {
     List<CategoryModel> urlModels =
     dataList.map((data) => CategoryModel.fromMap(data)).toList(growable: false);
-    return CategoryModelList(urls: urlModels);
+    return CategoryModelList(categories: urlModels);
   }
 
   List<Map<String, dynamic>> toJson() =>
-      urls.map((CategoryModel) => CategoryModel.toJson()).toList();
+      categories.map((CategoryModel) => CategoryModel.toJson()).toList();
 
   Map<String, dynamic> toMap() {
     return {
-      'urls': urls.map((CategoryModel) => CategoryModel.toMap()).toList(),
+      'category': categories.map((CategoryModel) => CategoryModel.toMap()).toList(),
     };
   }
 
-  bool get isNotEmpty => urls.isNotEmpty;
+  bool get isNotEmpty => categories.isNotEmpty;
 
-  CategoryModel? get first => urls.isNotEmpty ? urls[0] : null;
+  CategoryModel? get first => categories.isNotEmpty ? categories[0] : null;
 
   void add(CategoryModel CategoryModel) {
-    urls.add(CategoryModel);
+    categories.add(CategoryModel);
   }
 }
