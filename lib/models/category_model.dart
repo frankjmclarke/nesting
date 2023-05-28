@@ -6,6 +6,7 @@ class CategoryModel {
   final int color;
   final int flag;
   final String imageUrl; // Added imageUrl field
+  final int numItems; // Added numItems field
 
   CategoryModel({
     required this.uid,
@@ -15,6 +16,7 @@ class CategoryModel {
     required this.color,
     required this.flag,
     required this.imageUrl, // Added imageUrl parameter
+    required this.numItems, // Added numItems parameter
   });
 
   Map<String, dynamic> toMap() {
@@ -26,10 +28,31 @@ class CategoryModel {
       'color': color,
       'flag': flag,
       'imageUrl': imageUrl, // Added imageUrl key-value pair
+      'numItems': numItems, // Added numItems key-value pair
     };
   }
-
-  factory CategoryModel.fromMap(Map data) {
+  CategoryModel copyWith({
+    String? uid,
+    String? title,
+    String? parent,
+    int? icon,
+    int? color,
+    int? flag,
+    String? imageUrl,
+    int? numItems,
+  }) {
+    return CategoryModel(
+      uid: uid ?? this.uid,
+      title: title ?? this.title,
+      parent: parent ?? this.parent,
+      icon: icon ?? this.icon,
+      color: color ?? this.color,
+      flag: flag ?? this.flag,
+      imageUrl: imageUrl ?? this.imageUrl,
+      numItems: numItems ?? this.numItems,
+    );
+  }
+  factory CategoryModel.fromMap(Map<String, dynamic> data) {
     return CategoryModel(
       uid: data['uid'] ?? '07hVeZyY2PM7VK8DC5QX',
       title: data['title'] ?? 'Hello',
@@ -37,17 +60,18 @@ class CategoryModel {
       icon: data['icon'] ?? 0,
       color: data['color'] ?? 0,
       flag: data['flag'] ?? 0,
-      imageUrl: data['imageUrl'] ?? 'https://cdn.onlinewebfonts.com/svg/img_259453.png', // Added imageUrl assignment
+      imageUrl: data['imageUrl'] ?? 'https://cdn.onlinewebfonts.com/svg/img_259453.png',
+      numItems: data['numItems'] ?? 0,
     );
   }
 
   @override
   String getTitle() {
-    return title ?? ''; // Customize the string representation as per your requirements
+    return title ?? '';
   }
 
   String getParent() {
-    return parent ?? ''; // Customize the string representation as per your requirements
+    return parent ?? '';
   }
 
   Map<String, dynamic> toJson() => {
@@ -57,7 +81,8 @@ class CategoryModel {
     "icon": icon,
     "color": color,
     "flag": flag,
-    "imageUrl": imageUrl, // Added imageUrl key-value pair
+    "imageUrl": imageUrl,
+    "numItems": numItems,
   };
 }
 
@@ -66,7 +91,7 @@ class CategoryModelList {
 
   CategoryModelList({required this.categories});
 
-  factory CategoryModelList.fromList(List<Map> dataList) {
+  factory CategoryModelList.fromList(List<Map<String, dynamic>> dataList) {
     List<CategoryModel> urlModels = dataList
         .map((data) => CategoryModel.fromMap(data))
         .toList(growable: false);
@@ -74,11 +99,11 @@ class CategoryModelList {
   }
 
   List<Map<String, dynamic>> toJson() =>
-      categories.map((CategoryModel) => CategoryModel.toJson()).toList();
+      categories.map((categoryModel) => categoryModel.toJson()).toList();
 
   Map<String, dynamic> toMap() {
     return {
-      'category': categories.map((CategoryModel) => CategoryModel.toMap()).toList(),
+      'category': categories.map((categoryModel) => categoryModel.toMap()).toList(),
     };
   }
 
@@ -86,7 +111,7 @@ class CategoryModelList {
 
   CategoryModel? get first => categories.isNotEmpty ? categories[0] : null;
 
-  void add(CategoryModel CategoryModel) {
-    categories.add(CategoryModel);
+  void add(CategoryModel categoryModel) {
+    categories.add(categoryModel);
   }
 }

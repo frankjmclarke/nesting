@@ -1,43 +1,37 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_starter/ui/url_list_ui.dart';
 import 'package:get/get.dart';
 import '../controllers/category_controller.dart';
 import '../models/category_model.dart';
 
 class CategoryListUI extends StatelessWidget {
   final CategoryController categoryController = Get.put(CategoryController());
-
   @override
   Widget build(BuildContext context) {
+    final List<CategoryModel> cats =
+        categoryController.firestoreCategoryList.value?.categories ?? [];
+/*
+    if (cats.length < 1) {
+      WidgetsBinding.instance?.addPostFrameCallback((_) {
+        _nextScreen();
+      });
+      return Container(); // Return an empty container since the screen is not being displayed
+    }
+*/
     return Scaffold(
       appBar: AppBar(
-        title: Text('Lists'),
+        title: Text('Categories'),
       ),
-      body: Obx(
-            () {
-          if (categoryController.firestoreCategoryList.value == null) {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          } else {
-            final List<CategoryModel> cats = categoryController.firestoreCategoryList.value!.categories;
-            if (cats.isEmpty) {
-              return Center(
-                child: Text('No data available'),
-              );
-            } else {
-              return ListView.builder(
-                itemCount: cats.length,
-                itemBuilder: (context, index) {
-                  final catModel = cats[index];
-                  return _buildCategoryItem(catModel);
-                },
-              );
-            }
-          }
+      body: ListView.builder(
+        itemCount: cats.length,
+        itemBuilder: (context, index) {
+          final catModel = cats[index];
+          return _buildCategoryItem(catModel);
         },
       ),
     );
   }
+
 
   Widget _buildCategoryItem(CategoryModel catModel) {
     String imageUrl = catModel.imageUrl.isNotEmpty
@@ -92,12 +86,13 @@ class CategoryListUI extends StatelessWidget {
                 ),
                 child: Image.network(
                   imageUrl,
-                  fit: BoxFit.cover, // Crop and center the image
+                  fit: BoxFit.contain, // large as possible while still containing the source entirely within the target box.
                 ),
               ),
             ),
             Expanded(
               child: ListTile(
+                onTap: _nextScreen,
                 title: Text(
                   catModel.title,
                   maxLines: 1,
@@ -107,13 +102,13 @@ class CategoryListUI extends StatelessWidget {
                   catModel.icon.toString(),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                ),
+                ),/*
                 trailing: IconButton(
                   icon: Icon(Icons.edit),
                   onPressed: () {
-                    _editCategoryModel(catModel);
+                    Get.to(UrlListUI());
                   },
-                ),
+                ),*/
               ),
             ),
           ],
@@ -121,8 +116,7 @@ class CategoryListUI extends StatelessWidget {
       ),
     );
   }
-
-  void _editCategoryModel(CategoryModel catModel) {
- //   Get.to(EditCategoryScreen(catModel: catModel, categoryController: categoryController));
+  void _nextScreen(){
+    Get.to(UrlListUI());
   }
 }

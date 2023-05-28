@@ -56,6 +56,7 @@ class CategoryController extends GetxController {
         color:1,
         flag:1,
         imageUrl: 'https://cdn.onlinewebfonts.com/svg/img_259453.png',
+        numItems:0,
       );
       currentList.categories.add(newCategoryModel);
       firestoreCategoryList.value = currentList;
@@ -126,6 +127,7 @@ class CategoryController extends GetxController {
     color:1,
     flag:1,
     imageUrl: 'https://cdn.onlinewebfonts.com/svg/img_259453.png',
+    numItems:0,
   );
 
   Future<void> insertTestCategory() async {
@@ -216,6 +218,41 @@ class CategoryController extends GetxController {
       print('Category updated successfully');
     } catch (error) {
       print('Error updating Category: $error');
+    }
+  }
+
+  void updateNumItems(String uid, int items) {
+    final List<CategoryModel>? categoryList = firestoreCategoryList.value?.categories;
+    if (categoryList != null) {
+      final int index = categoryList.indexWhere((category) => category.uid == uid);
+      if (index != -1) {
+        CategoryModel updatedCategory = categoryList[index];
+        updatedCategory = updatedCategory.copyWith(numItems: items);
+        categoryList[index] = updatedCategory;
+        firestoreCategoryList.value = CategoryModelList(categories: categoryList);
+        updateCategory(updatedCategory);
+      }
+    }
+  }
+
+  void incrementNumItems(int itemsToAdd) {
+    final CategoryModelList currentList = firestoreCategoryList.value ?? CategoryModelList(categories: []);
+    for (int i = 0; i < currentList.categories.length; i++) {
+      CategoryModel category = currentList.categories[i];
+      CategoryModel updatedCategory = category.copyWith(numItems: category.numItems + itemsToAdd);
+      currentList.categories[i] = updatedCategory;
+    }
+    firestoreCategoryList.value = currentList;
+    updateCategoryListInFirestore(currentList);
+  }
+
+  Future<void> updateCategoryListInFirestore(CategoryModelList updatedList) async {
+    try {
+      final jsonData = {'category': updatedList.toMap()};
+      await _db.collection('category').doc('your_document_id').update(jsonData);
+      print('Category list updated successfully');
+    } catch (error) {
+      print('Error updating category list: $error');
     }
   }
 }

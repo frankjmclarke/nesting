@@ -11,7 +11,7 @@ class UrlListUI extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('My App'),
+        title: Text('List'),
       ),
       body: Obx(
             () {
