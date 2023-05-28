@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_starter/controllers/controllers.dart';
 import 'package:flutter_starter/ui/ui.dart';
 import 'package:get/get.dart';
+import 'category_list_ui.dart';
 import 'home_menu_ui.dart';
 
 class HomeUI extends StatefulWidget {
@@ -15,7 +16,7 @@ class _HomeUIState extends State<HomeUI> {
 
   final List<Widget> _screens = [
     HomeMenuUI(),
-    UrlListUI(),
+    CategoryListUI(),//    CategoryListUI(),UrlListUI
     SettingsUI(),
   ];
 

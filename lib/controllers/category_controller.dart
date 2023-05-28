@@ -19,7 +19,7 @@ class CategoryController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    fetchCategoryList();
+    //fetchCategoryList();
   }
 
   @override
@@ -61,21 +61,21 @@ class CategoryController extends GetxController {
       firestoreCategoryList.value = currentList;
       insertCategory(newCategoryModel);
   }
-
+/*
   Future<void> fetchCategoryListByCategory(String category) async {
     try {
       final snapshot = await _db
           .collection('category')
           .where('category', isEqualTo: category)
           .get();
-      final Categorys =
+      final cats =
       snapshot.docs.map((doc) => CategoryModel.fromMap(doc.data())).toList();
-      firestoreCategoryList.value = CategoryModelList(categories: Categorys);
+      firestoreCategoryList.value = CategoryModelList(categories: cats);
 
       _db.collection('category').snapshots().listen((snapshot) {
-        final Categorys =
+        final cats =
         snapshot.docs.map((doc) => CategoryModel.fromMap(doc.data())).toList();
-        firestoreCategoryList.value = CategoryModelList(categories: Categorys);
+        firestoreCategoryList.value = CategoryModelList(categories: cats);
         print("Firestore collection updated");
       });
 
@@ -92,19 +92,19 @@ class CategoryController extends GetxController {
 
  */
   }
-
+*/
   Future<void> fetchCategoryList() async {
     try {
       final snapshot = await _db.collection('category').get();
-      final Categorys =
+      final cats =
           snapshot.docs.map((doc) => CategoryModel.fromMap(doc.data())).toList();
-      firestoreCategoryList.value = CategoryModelList(categories: Categorys);
+      firestoreCategoryList.value = CategoryModelList(categories: cats);
 
       _db.collection('category').snapshots().listen((snapshot) {
-        final Categorys =
+        final cats =
             snapshot.docs.map((doc) => CategoryModel.fromMap(doc.data())).toList();
-        firestoreCategoryList.value = CategoryModelList(categories: Categorys);
-        print("Firestore collection updated");
+        firestoreCategoryList.value = CategoryModelList(categories: cats);
+        print("Firestore fetchCategoryList");
       });
 
       print("fetchCategoryList SUCCESS ");
@@ -169,7 +169,7 @@ class CategoryController extends GetxController {
       print('Error updating Category: $error');
     }
   }
-
+/*
   void updateCategory2(CategoryModel updatedCategoryModel) async {
     final index = firestoreCategoryList.value!.categories
         .indexWhere((Category) => Category.uid == updatedCategoryModel.uid);
@@ -194,7 +194,7 @@ class CategoryController extends GetxController {
         print('Error updating Category: $error');
       }
     }
-  }
+  }*/
 
   bool saveChanges(CategoryModel updatedCategoryModel) {
     if (updatedCategoryModel.title.isEmpty) {

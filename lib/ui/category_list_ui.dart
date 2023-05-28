@@ -10,7 +10,7 @@ class CategoryListUI extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('My App'),
+        title: Text('Lists'),
       ),
       body: Obx(
             () {

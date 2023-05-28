@@ -31,23 +31,23 @@ class CategoryModel {
 
   factory CategoryModel.fromMap(Map data) {
     return CategoryModel(
-      uid: data['uid'],
-      title: data['title'] ?? '',
-      parent: data['parent'] ?? '',
-      icon: data['icon'] ?? '',
-      color: data['color'] ?? '',
-      flag: data['flag'] ?? '',
-      imageUrl: data['imageUrl'] ?? '', // Added imageUrl assignment
+      uid: data['uid'] ?? '07hVeZyY2PM7VK8DC5QX',
+      title: data['title'] ?? 'Hello',
+      parent: data['parent'] ?? '07hVeZyY2PM7VK8DC5QX',
+      icon: data['icon'] ?? 0,
+      color: data['color'] ?? 0,
+      flag: data['flag'] ?? 0,
+      imageUrl: data['imageUrl'] ?? 'https://cdn.onlinewebfonts.com/svg/img_259453.png', // Added imageUrl assignment
     );
   }
 
   @override
   String getTitle() {
-    return title; // Customize the string representation as per your requirements
+    return title ?? ''; // Customize the string representation as per your requirements
   }
 
   String getParent() {
-    return parent; // Customize the string representation as per your requirements
+    return parent ?? ''; // Customize the string representation as per your requirements
   }
 
   Map<String, dynamic> toJson() => {

@@ -45,7 +45,7 @@ class UrlController extends GetxController {
   @override
   void onReady() async {
     super.onReady();
-    fetchUrlList();
+    //fetchUrlList();
   }
 
   @override
