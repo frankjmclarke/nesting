@@ -134,6 +134,29 @@ class CategoryController extends GetxController {
     insertCategory(testCategory);
   }
 
+  Future<void> insertCategoryName(String title) async {
+    try {
+      // Create a new category model
+      CategoryModel category = CategoryModel(
+        uid: StringUtil.generateRandomId(15),
+        title: title,
+        parent: '07hVeZyY2PM7VK8DC5QX',
+        icon: 1,
+        color: 1,
+        flag: 1,
+        imageUrl: 'https://cdn.onlinewebfonts.com/svg/img_259453.png',
+        numItems: 0,
+      );
+      // Convert the CategoryModel to a JSON map
+      Map<String, dynamic> jsonData = category.toJson();
+      // Insert the new category into Firestore
+      await _db.collection('category').doc(category.uid).set(jsonData);
+      print('New category inserted successfully');
+    } catch (error) {
+      print('Error inserting new category: $error');
+    }
+  }
+
   Future<void> insertCategory(CategoryModel testCategory) async {
     try {
       // Convert the CategoryModel to a JSON map

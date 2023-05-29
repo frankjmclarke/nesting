@@ -22,12 +22,47 @@ class CategoryListUI extends StatelessWidget {
       appBar: AppBar(
         title: Text('Categories'),
       ),
-      body: ListView.builder(
-        itemCount: cats.length,
+      //The Obx widget wraps the ListView.builder, and it observes the categories
+      //list from the CategoryController. Whenever the categories list changes,
+      //the ListView.builder is automatically rebuilt with the updated data.
+      body: Obx(() => ListView.builder(
+        itemCount: categoryController.firestoreCategoryList.value?.categories.length,
         itemBuilder: (context, index) {
-          final catModel = cats[index];
-          return _buildCategoryItem(catModel);
+          final catModel = categoryController.firestoreCategoryList.value?.categories[index];
+          return _buildCategoryItem(catModel!);
         },
+      )),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              TextEditingController textController = TextEditingController();
+
+              return AlertDialog(
+                title: Text('New Category'),
+                content: TextField(
+                  controller: textController,
+                  decoration: InputDecoration(
+                    labelText: 'Category Name',
+                  ),
+                ),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      String title = textController.text;
+                      insertCategoryName(title);
+                     // categoryController.updateCategoryListInFirestore();
+                    },
+                    child: Text('Add'),
+                  ),
+                ],
+              );
+            },
+          );
+        },
+        child: Icon(Icons.add),
       ),
     );
   }
@@ -116,6 +151,11 @@ class CategoryListUI extends StatelessWidget {
       ),
     );
   }
+
+  Future<void> insertCategoryName(String title) async {
+    categoryController.insertCategoryName(title);
+  }
+
   void _nextScreen(){
     Get.to(UrlListUI());
   }

@@ -1,6 +1,6 @@
 class CategoryModel {
   final String uid;
-  final String title;
+  late final String title;
   final String parent; //linked list
   final int icon;
   final int color;

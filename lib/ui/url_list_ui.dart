@@ -12,6 +12,7 @@ class UrlListUI extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ever(urlController.firestoreUrlList, (_) => _updateCategoryTotal());
     return Scaffold(
       appBar: AppBar(
         title: Text('List'),
@@ -25,7 +26,7 @@ class UrlListUI extends StatelessWidget {
           } else {
             final List<UrlModel> urls = urlController.firestoreUrlList.value!.urls;
             urlsOnLoad=urls.length;
-            _updateCategoryTotal();
+           // _updateCategoryTotal();
             if (urls.isEmpty) {
               return Center(
                 child: Text('No data available'),
