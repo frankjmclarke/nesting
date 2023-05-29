@@ -16,6 +16,12 @@ class CategoryController extends GetxController {
 
   static CategoryController get to => Get.find();
 
+  String? _uidCurrent;
+  String? get uidCurrent => _uidCurrent;
+  set uidCurrent(String? uidCurrent) {
+    _uidCurrent = uidCurrent;
+  }
+
   @override
   void onInit() {
     super.onInit();

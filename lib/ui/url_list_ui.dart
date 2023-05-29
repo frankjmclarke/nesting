@@ -7,11 +7,12 @@ import 'edit_url_ui.dart';
 
 class UrlListUI extends StatelessWidget {
   final UrlController urlController = Get.put(UrlController());
-  final CategoryController myController = Get.put(CategoryController());
-   int urlsOnLoad=0;
+  final CategoryController categoryController = Get.put(CategoryController());
+  int urlsOnLoad=0;
 
   @override
   Widget build(BuildContext context) {
+    // Whenever the value of urlController.firestoreUrlList changes, the _updateCategoryTotal method is called.
     ever(urlController.firestoreUrlList, (_) => _updateCategoryTotal());
     return Scaffold(
       appBar: AppBar(
@@ -19,29 +20,41 @@ class UrlListUI extends StatelessWidget {
       ),
       body: Obx(
             () {
-          if (urlController.firestoreUrlList.value == null) {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          } else {
-            final List<UrlModel> urls = urlController.firestoreUrlList.value!.urls;
-            urlsOnLoad=urls.length;
-           // _updateCategoryTotal();
-            if (urls.isEmpty) {
-              return Center(
-                child: Text('No data available'),
-              );
-            } else {
-              return ListView.builder(
-                itemCount: urls.length,
-                itemBuilder: (context, index) {
-                  final urlModel = urls[index];
-                  return _buildUrlItem(urlModel);
-                },
-              );
-            }
-          }
-        },
+              //Inside the Obx widget, the current value of urlController.firestoreUrlList is checked.
+              // If it is null, a CircularProgressIndicator is displayed
+              if (urlController.firestoreUrlList.value == null) {
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              } else {
+                final List<UrlModel> urls = urlController.firestoreUrlList.value!.urls;
+                urlsOnLoad = urls.length;
+
+                if (urls.isEmpty) {
+                  return Center(
+                    child: Text('No data available'),
+                  );
+                } else {
+                  final filteredUrls = categoryController.uidCurrent == '07hVeZyY2PM7VK8DC5QX'
+                      ? urls
+                      : urls.where((urlModel) => urlModel.uid == categoryController.uidCurrent).toList();
+
+                  if (filteredUrls.isEmpty) {
+                    return Center(
+                      child: Text('No data available for the selected category'),
+                    );
+                  } else {
+                    return ListView.builder(
+                      itemCount: filteredUrls.length,
+                      itemBuilder: (context, index) {
+                        final urlModel = filteredUrls[index];
+                        return _buildUrlItem(urlModel);
+                      },
+                    );
+                  }
+                }
+              }
+            },
       ),
     );
   }
@@ -132,7 +145,7 @@ class UrlListUI extends StatelessWidget {
     );
   }
   void _updateCategoryTotal() {
-      myController.updateNumItems('07hVeZyY2PM7VK8DC5QX',urlsOnLoad);
+      categoryController.updateNumItems('07hVeZyY2PM7VK8DC5QX',urlsOnLoad);
   }
   void _editUrlModel(UrlModel urlModel) {
     Get.to(EditUrlScreen(urlModel: urlModel, urlController: urlController));

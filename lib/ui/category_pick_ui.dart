@@ -125,6 +125,9 @@ class CategoryPickUI extends StatelessWidget {
               child: ListTile(
                 onTap:  () {
                   urlController.addTextToListIfUnique(catModel.uid);
+                  if (catModel.uid=='07hVeZyY2PM7VK8DC5QX')
+                    catModel.uid ='';
+                  categoryController.uidCurrent = catModel.uid;
                   Get.to(UrlListUI());
                 },
                 title: Text(

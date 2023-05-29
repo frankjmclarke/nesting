@@ -127,7 +127,10 @@ class CategoryListUI extends StatelessWidget {
             ),
             Expanded(
               child: ListTile(
-                onTap: _nextScreen,
+                onTap:  () {
+                  categoryController.uidCurrent = catModel.uid;
+                  Get.to(UrlListUI());
+                },
                 title: Text(
                   catModel.title,
                   maxLines: 1,
@@ -156,7 +159,4 @@ class CategoryListUI extends StatelessWidget {
     categoryController.insertCategoryName(title);
   }
 
-  void _nextScreen(){
-    Get.to(UrlListUI());
-  }
 }

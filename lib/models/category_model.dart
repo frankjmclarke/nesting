@@ -1,5 +1,5 @@
 class CategoryModel {
-  final String uid;
+  late final String uid;
   late final String title;
   final String parent; //linked list
   final int icon;

@@ -115,7 +115,7 @@ class UrlController extends GetxController {
     try {
       final snapshot = await _db
           .collection('urls')
-          .where('category', isEqualTo: category)
+          .where('uid', isEqualTo: category)
           .get();
       final urls =
       snapshot.docs.map((doc) => UrlModel.fromMap(doc.data())).toList();
