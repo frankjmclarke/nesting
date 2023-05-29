@@ -54,7 +54,7 @@ class UrlModel {
 
   factory UrlModel.fromMap(Map data) {
     return UrlModel(
-      uid: data['uid'],
+      uid: data['uid'] ?? '07hVeZyY2PM7VK8DC5QX',
       email: data['email'] ?? '',
       name: data['name'] ?? '',
       url: data['url'] ?? '',

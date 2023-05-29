@@ -7,6 +7,7 @@ import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 import '../helpers/image.dart';
 import '../helpers/string_util.dart';
 import '../models/url_model.dart';
+import '../ui/category_pick_ui.dart';
 
 class UrlController extends GetxController {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -15,13 +16,10 @@ class UrlController extends GetxController {
   final Rxn<UrlModel> firebaseUrl = Rxn<UrlModel>();
   final Rxn<UrlModelList> firestoreUrlList = Rxn<UrlModelList>();
 
-  //final TextEditingController nameController = TextEditingController();
-  //final TextEditingController emailController = TextEditingController();
-  //final TextEditingController passwordController = TextEditingController();
-
   final RxBool admin = false.obs;
   StreamSubscription<String>? _textStreamSubscription;
   String _sharedText = "";
+  //String categoryUid = "";
 
   static UrlController get to => Get.find();
 
@@ -32,27 +30,28 @@ class UrlController extends GetxController {
     _textStreamSubscription =
         ReceiveSharingIntent.getTextStream().listen((String text) {
       _sharedText = text;
-      _addTextToListIfUnique();
+      _newUrl();
     });
     ReceiveSharingIntent.getInitialText().then((String? text) {
       if (text != null) {
         _sharedText = text;
-        _addTextToListIfUnique();
+        _newUrl();
       }
     });
+  }
+
+  void _newUrl(){
+    Get.to(CategoryPickUI());
+    //      _addTextToListIfUnique();
   }
 
   @override
   void onReady() async {
     super.onReady();
-    //fetchUrlList();
   }
 
   @override
   void onClose() {
-    //nameController.dispose();
-    //emailController.dispose();
-    //passwordController.dispose();
     super.onClose();
   }
 
@@ -85,13 +84,13 @@ class UrlController extends GetxController {
     return '';
   }
 
-  Future<void> _addTextToListIfUnique() async {
+  Future<void> addTextToListIfUnique(String uid) async {
     if (!containsText(_sharedText)) {
       String imageUrl = await _fetchHtmlText(_sharedText);
       print("AAAAAA imageUrl " + imageUrl);
       final currentList = firestoreUrlList.value ?? UrlModelList(urls: []);
       final newUrlModel = UrlModel(
-        uid: StringUtil.generateRandomId(15),
+        uid: uid,
         email: '',
         name: '',
         url: _sharedText,
@@ -156,9 +155,6 @@ class UrlController extends GetxController {
   }
 
   Future<void> signOut() async {
-    //nameController.clear();
-    //emailController.clear();
-    //passwordController.clear();
     await _auth.signOut();
   }
 

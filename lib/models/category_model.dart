@@ -31,6 +31,7 @@ class CategoryModel {
       'numItems': numItems, // Added numItems key-value pair
     };
   }
+
   CategoryModel copyWith({
     String? uid,
     String? title,
